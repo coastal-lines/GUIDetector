@@ -5,8 +5,6 @@ class MSER():
 
     def GetRegionsAndBoundingBoxesByMSER(image):
         img = image.copy()
-        img = ImageConverters.ConvertToBW(img)
-
         mser = cv2.MSER_create()
         regions, boundingBoxes = mser.detectRegions(img)
 
@@ -19,3 +17,5 @@ class MSER():
 
             #this is for checking each region
             #image = vis[y:y + h, x:x + w]
+
+        return image
