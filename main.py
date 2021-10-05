@@ -1,8 +1,12 @@
 from Helpers.ImageLoaders import ImageLoaders
 from Helpers.FeatureExtractors.MSER import MSER
+from Helpers.FeatureExtractors.Contours import Countours
 from Helpers.CommonMethods import CommonMethods
+from Helpers.ImageConverters import ImageConverters
 
 img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\FullTests.png')
-regions, boundingBoxes = MSER.GetRegionsAndBoundingBoxesByMSER(img)
-img_for_draw = MSER.DrawRectanglesForMSER(boundingBoxes, img)
-CommonMethods.ShowImage(img_for_draw)
+bw = ImageConverters.ConvertToBW(img)
+contours, hierarchy = Countours.GetContoursByCanny(bw, 0, 255)
+Countours.DrawContours(contours, img)
+CommonMethods.ShowImage(img)
+
