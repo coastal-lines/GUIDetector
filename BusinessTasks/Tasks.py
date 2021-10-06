@@ -6,6 +6,7 @@ from Helpers.CommonMethods import CommonMethods
 from Helpers.FeatureExtractors.Contours import Countours
 from Helpers.Filters.ImageFilters import ImageFilters
 from Helpers.MorphologicalOperations import MorphologicalOperations
+from Helpers.Threshold import Threshold
 
 class Tasks():
 
@@ -13,9 +14,8 @@ class Tasks():
         #find rectangles
         img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\FullTests.png')
         bw = ImageConverters.ConvertToBW(img)
-        dilate = MorphologicalOperations.Dilation(bw)
-        #blur = ImageFilters.Blur(bw)
-        th = ImageFilters.AdaptiveThresholding(dilate,255,11,8)
+        #th = ImageFilters.AdaptiveThresholding(bw,255,11,8)
+        th = Threshold.BinaryThreshold(bw)
         CommonMethods.ShowImage(th)
         contours, hierarchy = Countours.GetContoursByCanny(th, 0, 255)
         Countours.DrawRectangle(contours, img)
