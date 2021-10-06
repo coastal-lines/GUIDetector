@@ -1,17 +1,23 @@
 import cv2
-import math
+from Helpers.Filters.ImageFilters import ImageFilters
+from Helpers.CommonMethods import CommonMethods
+import random as rng
 import numpy as np
 
 class Countours():
+
+    def GetContours(image_bw):
+        contours, hierarchy = cv2.findContours(image_bw, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        return contours, hierarchy
 
     def GetContoursByCanny(image_bw, lower_threshold, upper_threshold):
         detected_edges = cv2.Canny(image_bw, lower_threshold, upper_threshold)
         #CV_RETR_LIST - режим группировки - без группировки контуров
         #CV_CHAIN_APPROX_SIMPLE — склеивает все горизонтальные, вертикальные и диагональные контуры
-        contours, hierarchy = cv2.findContours(detected_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(detected_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         return contours, hierarchy
 
-    def DrawContours(contours, image):
+    def DrawRectangle(contours, image):
         for cnt in contours:
             x, y, w, h = cv2.boundingRect(cnt)
             point1 = (x, y)
