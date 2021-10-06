@@ -2,8 +2,8 @@ import cv2
 
 class Threshold():
 
-    def BinaryThreshold(img):
-        ret, th = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
+    def BinaryThreshold(img,min,max):
+        ret, th = cv2.threshold(img, min, max, cv2.THRESH_BINARY)
         return th
 
     def AdaptiveThreshold(img, max_value, block_size, constant):
@@ -15,3 +15,7 @@ class Threshold():
         th2 = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 8)
         blended = cv2.addWeighted(src1=th1, alpha=0.6, src2=th2, beta=0.4, gamma=0)
         return blended
+
+    def InRangeThreshold(img, min, max):
+        th = cv2.inRange(img, min, max)
+        return th

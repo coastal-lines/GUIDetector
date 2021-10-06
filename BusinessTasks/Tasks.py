@@ -13,22 +13,28 @@ import math
 
 class Tasks():
 
-    def FindFilterTests(self):
+    def FindFilterTests(img):
         #find rectangles
-        img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\Tests2.bmp')
+        #img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\Tests6.bmp')
         bw = ImageConverters.ConvertToBW(img)
-
-        gamma = 0.5
-        invGamma = 1 / gamma
-        table = [((i / 255) ** invGamma) * 255 for i in range(256)]
-        table = np.array(table, np.uint8)
-        bw = cv2.LUT(bw, table)
-
-        #CommonMethods.ShowImage(bw)
-        th = Threshold.AdaptiveThreshold(bw,255,11,8)
+        blur = ImageFilters.Blur(bw)
+        th = Threshold.InRangeThreshold(blur,245,255)#(blur,200,11,8)
         contours, hierarchy = Countours.GetContours(th)
-        Countours.DrawRectangle(contours, img)
-        CommonMethods.ShowImage(img)
+        cnt = Countours.DrawRectangle2(contours, img)
+        #CommonMethods.ShowImage(img)
+        return cnt
+
+    def FindFilterTests2(img):
+        # find rectangles
+        # img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\Tests6.bmp')
+        bw = ImageConverters.ConvertToBW(img)
+        blur = ImageFilters.Blur(bw)
+        th = Threshold.InRangeThreshold(blur, 245, 255)  # (blur,200,11,8)
+        contours, hierarchy = Countours.GetContours(th)
+        cnt = Countours.DrawRectangle3(contours, img)
+        #CommonMethods.ShowImage(img)
+        return cnt
+
 
         #check keywords
         #save in memory as object
