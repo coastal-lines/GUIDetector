@@ -7,7 +7,7 @@ import numpy as np
 class Countours():
 
     def GetContours(image_bw):
-        contours, hierarchy = cv2.findContours(image_bw, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(image_bw, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         return contours, hierarchy
 
     def GetContoursByCanny(image_bw, lower_threshold, upper_threshold):
@@ -23,3 +23,11 @@ class Countours():
             point1 = (x, y)
             point2 = (x + w, y + h)
             cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
+
+    def DrawRectangle2(contours, image):
+        for cnt in contours:
+            x, y, w, h = cv2.boundingRect(cnt)
+            if w > 150 and h > 20:
+                point1 = (x, y)
+                point2 = (x + w, y + h)
+                cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
