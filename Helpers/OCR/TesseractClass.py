@@ -9,5 +9,5 @@ class TesseractOCR():
         image = ImageConverters.ConvertImageToNegative(image)
 
         text = pytesseract.image_to_string(image)
-        print(text)
+        #print(text)
         return text
