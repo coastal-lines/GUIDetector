@@ -5,7 +5,7 @@ from Helpers.ImageLoaders import ImageLoaders
 class Countours():
 
     def GetContours(image_bw):
-        contours, hierarchy = cv2.findContours(image_bw, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(image_bw, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
         return contours, hierarchy
 
     def GetContoursByCanny(image_bw, lower_threshold, upper_threshold):

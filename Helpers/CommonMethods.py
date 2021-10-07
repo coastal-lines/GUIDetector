@@ -12,7 +12,11 @@ class CommonMethods():
         cv2.imshow("", image)
         cv2.waitKey(0)
 
-    def GeyMedian(image):
+    def GetMedian(image):
         #медиана - половина массива меньше этого значения, а половина больше
         median_intensity = np.median(image)
         return median_intensity
+
+    def Resize(image, w, h):
+        resized_image = cv2.resize(image, (w, h))
+        return resized_image
