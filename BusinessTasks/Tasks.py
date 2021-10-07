@@ -35,6 +35,14 @@ class Tasks():
         #CommonMethods.ShowImage(img)
         return cnt
 
+    def FindFilterTests3(img):
+        # find rectangles
+        bw = ImageConverters.ConvertToBW(img)
+        blur = ImageFilters.Blur(bw)
+        th = Threshold.InRangeThreshold(blur, 245, 255)  # (blur,200,11,8)
+        contours, hierarchy = Countours.GetContours(th)
+        return contours
+
 
         #check keywords
         #save in memory as object

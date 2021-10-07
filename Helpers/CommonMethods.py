@@ -8,6 +8,7 @@ class CommonMethods():
         return img
 
     def ShowImage(image):
+        image = cv2.resize(image, (1200, 800))
         cv2.imshow("", image)
         cv2.waitKey(0)
 

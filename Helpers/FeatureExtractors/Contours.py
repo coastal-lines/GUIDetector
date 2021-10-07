@@ -31,7 +31,7 @@ class Countours():
                 point1 = (x, y)
                 point2 = (x + w, y + h)
                 cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
-                print(w)
+                #print(w)
                 return cnt
 
     def DrawRectangle3(contours, image):
@@ -41,5 +41,5 @@ class Countours():
                 point1 = (x, y)
                 point2 = (x + w, y + h)
                 cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
-                print(w)
+                #print(w)
                 return cnt
