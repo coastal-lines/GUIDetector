@@ -12,7 +12,6 @@ cnt2 = Tasks.FindFilterTests2(img2)
 
 img3 = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\ORB\Tests4.bmp')
 contours = Tasks.FindFilterTests3(img3)
-#print(len(contours))
 
 result = []
 for c in contours:
@@ -25,14 +24,14 @@ for c in contours:
         point1 = (x, y)
         point2 = (x + w, y + h)
         cv2.rectangle(img3, point1, point2, (0, 255, 0), 3)
-        #print(d)
+        print(cv2.arcLength(c, True))
 
 result.sort()
-print(len(result))
-print(result[0])
+#print(len(result))
+#print(result[0])
 
 ret = cv2.matchShapes(cnt, cnt2, 1, 0.0)
-print("Result: ")
+#print("Result: ")
 #print(Decimal(ret))
 
 #
