@@ -1,8 +1,6 @@
 import cv2
-from Helpers.Filters.ImageFilters import ImageFilters
-from Helpers.CommonMethods import CommonMethods
-import random as rng
-import numpy as np
+from decimal import Decimal
+from Helpers.ImageLoaders import ImageLoaders
 
 class Countours():
 
@@ -17,6 +15,13 @@ class Countours():
         contours, hierarchy = cv2.findContours(detected_edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         return contours, hierarchy
 
+    def GetContourLength(contour):
+        return cv2.arcLength(contour, True)
+
+    def GetMatchShapes(contour1, contour2):
+        value = cv2.matchShapes(contour1, contour2, 1, 0.0)
+        return Decimal(value)
+
     def DrawRectangle(contours, image):
         for cnt in contours:
             x, y, w, h = cv2.boundingRect(cnt)
@@ -24,22 +29,13 @@ class Countours():
             point2 = (x + w, y + h)
             cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
 
-    def DrawRectangle2(contours, image):
+    def FindCustomContour(contours, image):
         for cnt in contours:
             x, y, w, h = cv2.boundingRect(cnt)
             if (w > 209 and h > 550) and (w < 270 and h < 590):
                 point1 = (x, y)
                 point2 = (x + w, y + h)
                 cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
-                #print(w)
-                return cnt
-
-    def DrawRectangle3(contours, image):
-        for cnt in contours:
-            x, y, w, h = cv2.boundingRect(cnt)
-            if (w > 209 and h > 550) and (w < 330 and h < 700):
-                point1 = (x, y)
-                point2 = (x + w, y + h)
-                cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
+                ImageLoaders.Serialize(cnt)
                 #print(w)
                 return cnt
