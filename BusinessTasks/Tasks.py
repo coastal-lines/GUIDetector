@@ -26,13 +26,11 @@ class Tasks():
             and orig_contour_length < temp_contour_length + CommonMethods.GetPercent(temp_contour_length, 30)):
                 match = Countours.GetMatchShapes(orig_contour, contour)
                 if match < 0.07:
-                    print(match)
-                    Countours.DrawRectangle(contour, img)
-
+                    #Countours.DrawRectangle(contour, img)
+                    return contour
         #CommonMethods.ShowImage(img)
-        return contour
 
-    def FindFilterTests(img):
+    def FindFilter(img):
         bw = ImageConverters.ConvertToBW(img)
         blur = ImageFilters.Blur(bw)
         th = Threshold.InRangeThreshold(blur,245,255)
@@ -45,7 +43,14 @@ class Tasks():
             if temp_contour_length > orig_contour_length / 2:
                 match = Countours.GetMatchShapes(orig_contour, contour)
                 if match < 0.07:
-                    Countours.DrawRectangle(contour, img)
-
+                    print(match)
+                    #Countours.DrawRectangle(contour, img)
+                    return contour
         #CommonMethods.ShowImage(img)
-        return contour
+
+    def NameInput(img, contour):
+        #ищем внутри определённого контура
+        x, y, w, h = cv2.boundingRect(contour)
+        roi = CommonMethods.CropImage(img, x, y, w, h)
+        CommonMethods.ShowImage(roi)
+

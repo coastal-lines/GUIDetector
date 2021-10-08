@@ -7,6 +7,11 @@ class CommonMethods():
         img = image[y:y + h, x:x + w]
         return img
 
+    def CropImageFromContour(image, contour):
+        x, y, w, h = cv2.boundingRect(contour)
+        img = image[y:y + h, x:x + w]
+        return img
+
     def ShowImage(image):
         image = cv2.resize(image, (1200, 800))
         cv2.imshow("", image)
