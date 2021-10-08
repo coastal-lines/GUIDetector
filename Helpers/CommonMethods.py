@@ -20,3 +20,6 @@ class CommonMethods():
     def Resize(image, w, h):
         resized_image = cv2.resize(image, (w, h))
         return resized_image
+
+    def GetPercent(number, percent):
+        return round((number / 100) * percent)

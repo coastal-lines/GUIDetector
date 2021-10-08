@@ -7,5 +7,5 @@ from Helpers.FeatureExtractors.MSER import MSER
 from Helpers.Threshold import Threshold
 from Helpers.ImageConverters import ImageConverters
 
-img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\ORB\Tests2.bmp')
+img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\ORB\Tests4.bmp')
 Tasks.FindMainWindow(img)

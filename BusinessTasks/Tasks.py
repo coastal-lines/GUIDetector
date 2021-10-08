@@ -14,10 +14,23 @@ class Tasks():
         blur = ImageFilters.Blur(bw)
         th = Threshold.AdaptiveThreshold(blur,255,11,8)
         dilate = MorphologicalOperations.Erosion(th)
-        #CommonMethods.ShowImage(dilate)
         contours, hierarchy = Countours.GetContours(th)
-        Countours.DrawRectangle(contours, img)
-        CommonMethods.ShowImage(img)
+
+        orig_contour = ImageLoaders.Deserialize("maintests")
+        orig_contour_length = Countours.GetContourLength(orig_contour)
+
+        for contour in contours:
+            temp_contour_length = Countours.GetContourLength(contour)
+            #проверяем что исследуемый контур помещается в нужный диапазон длинн
+            if (orig_contour_length > temp_contour_length - CommonMethods.GetPercent(temp_contour_length, 30)
+            and orig_contour_length < temp_contour_length + CommonMethods.GetPercent(temp_contour_length, 30)):
+                match = Countours.GetMatchShapes(orig_contour, contour)
+                if match < 0.07:
+                    print(match)
+                    Countours.DrawRectangle(contour, img)
+
+        #CommonMethods.ShowImage(img)
+        return contour
 
     def FindFilterTests(img):
         bw = ImageConverters.ConvertToBW(img)
