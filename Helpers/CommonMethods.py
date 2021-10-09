@@ -7,6 +7,13 @@ class CommonMethods():
         img = image[y:y + h, x:x + w]
         return img
 
+    def MaskForRoi(img, contour):
+        x, y, w, h = cv2.boundingRect(contour)
+        mask = np.zeros(img.shape[:2], np.uint8)
+        mask[y:y + h, x:x + w] = 255
+        masked_img = cv2.bitwise_and(img, img, mask=mask)
+        return masked_img
+
     def CropImageFromContour(image, contour):
         x, y, w, h = cv2.boundingRect(contour)
         img = image[y:y + h, x:x + w]
