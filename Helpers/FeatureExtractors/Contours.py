@@ -29,6 +29,9 @@ class Countours():
             point2 = (x + w, y + h)
             cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
 
+    def DrawRectangleByPoints(point1, point2, image):
+        cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
+
     def FindCustomContour(contours, image):
         for cnt in contours:
             x, y, w, h = cv2.boundingRect(cnt)
