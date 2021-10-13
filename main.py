@@ -14,11 +14,29 @@ from Helpers.ImageConverters import ImageConverters
 
 img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\ORB\FullTests2.png')
 img_resized = CommonMethods.Resize(img, 1919, 1079)
-width = 257
-heigth = 580
+
+height, width, channels = img.shape
+w_coef = 1919 / width
+h_coef = 1079 / height
 x = 70
 y = 245
+width = 257
+heigth = 580
+
+if (w_coef > 0):
+    x = round(x / w_coef)
+    width = round(width / w_coef)
+if (w_coef < 0):
+    x = round(x * w_coef)
+    width = round(width * w_coef)
+if (h_coef > 0):
+    y = round(y / h_coef)
+    heigth = round(heigth / h_coef)
+if (h_coef < 0):
+    y = round(y * h_coef)
+    heigth = round(heigth * h_coef)
+
 point1 = (x, y)
 point2 = (x + width, y + heigth)
-Countours.DrawRectangleByPoints(point1, point2, img_resized)
-CommonMethods.ShowImage(img_resized)
+Countours.DrawRectangleByPoints(point1, point2, img)
+CommonMethods.ShowImage(img)
