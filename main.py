@@ -1,5 +1,5 @@
 import numpy as np
-
+import pandas as pd
 from Helpers.ImageLoaders import ImageLoaders
 from Helpers.CommonMethods import CommonMethods
 from BusinessTasks.Tasks import Tasks
@@ -181,10 +181,11 @@ def DetectCells2():
     for i in range(len(cntsH[0])):
         position = len(cntsH[0]) - (i + 1) #нужен реверс т.к. отсчет идет с правой стороны
         x, y, w, h = cv2.boundingRect(cntsH[0][position])
-        if(w > h and w > 10 and h > 10):
+        if(w > h and w > 10 and h > 10 and h<40):
                 cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
                 cells.append(Cell(x, y, w, h))
-                cv2.putText(im, str(i), (x+5, y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 12), 2)
+                #cv2.putText(im, str(i), (x+5, y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 12), 2)
+    #CommonMethods.ShowImage(im)
 
     #cntsV = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     #vertical lines
@@ -210,12 +211,35 @@ def DetectCells2():
 
     #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    CommonMethods.ShowImage(im)
+    #CommonMethods.ShowImage(im)
+    return im,cells
+
+def ConvertCellsToTable(img, cells):
+    #calculate columns
+    columns = 0
+    for c in cells:
+        if(c.y == 0):
+            columns = columns + 1
+
+    #calculate rows
+    rows = 0
+    for c in cells:
+        if(c.x == 0):
+            rows = rows + 1
+
+    array = np.array(cells)
+    table = array.reshape(rows, columns)
+    df = pd.DataFrame(table, columns=['a', 'b', 'c', 'd'])
+    for index, row in df.iterrows():
+        print(row['a'].x, row['b'].x, row['c'].x, row['d'].x)
+    #CommonMethods.ShowImage(img)
 
 #Filter()
 #TestN()
 #TestS()
 #ApplyB()
 #Table()
-DetectCells2()
+img,cells = DetectCells2()
+print(len(cells))
+ConvertCellsToTable(img,cells)
 #CommonMethods.ShowImage(img)
