@@ -176,7 +176,6 @@ def DetectCells2():
     blur = ImageFilters.Blur(img)
     th = Threshold.AdaptiveThreshold(img, 255, 11, 8)
     erosion = MorphologicalOperations.Erosion(th)
-    #CommonMethods.ShowImage(erosion)
 
     cntsH = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     #horizontal lines
@@ -184,10 +183,9 @@ def DetectCells2():
         position = len(cntsH[0]) - (i + 1) #нужен реверс т.к. отсчет идет с правой стороны
         x, y, w, h = cv2.boundingRect(cntsH[0][position])
         if(w > h and w > 10 and h > 10):
-            #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
-            horizontalLinesArray.append(HorizontalLines(x, y, w, h))
-            cv2.putText(im, str(i), (x+5, y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 12), 2)
-            print(i)
+                cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
+                horizontalLinesArray.append(HorizontalLines(x, y, w, h))
+                cv2.putText(im, str(i), (x+5, y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 12), 2)
 
     #cntsV = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     #vertical lines
@@ -195,18 +193,22 @@ def DetectCells2():
     #    position = len(cntsV[0]) - (i + 1) #нужен реверс т.к. отсчет идет с правой стороны
     #    x, y, w, h = cv2.boundingRect(cntsV[0][position])
     #    if (w > h and w > 10 and h > 10):
-    #        cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
+    #        #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
     #        verticalLinesArray.append(VerticalLines(x, y, w, h))
-    #        #cv2.putText(im, str(i), (x, y+10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 12), 2)
+    #        cv2.putText(im, str(i), (x+20, y+10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 120), 2)
 
-    x_cell = 3
-    #y_cell = 5
+    x_cell = 1 + 1
+    y_cell = 1 + 1
     #x = verticalLinesArray[x_cell - 1].x
     #w = verticalLinesArray[x_cell].x - x
-    #y = horizontalLinesArray[y_cell - 1].y
-    #h = horizontalLinesArray[y_cell].y - y
+    y = horizontalLinesArray[y_cell - 1].y
+    h = horizontalLinesArray[y_cell].y - y
 
     #print(x, w, y, h)
+
+    #print(str(verticalLinesArray[1].x) + " " + str(verticalLinesArray[1].y) + " " + str(verticalLinesArray[1].w) + " " + str(verticalLinesArray[1].h))
+    print(str(horizontalLinesArray[1].x) + " " + str(horizontalLinesArray[1].y) + " " + str(horizontalLinesArray[1].w) + " " + str(horizontalLinesArray[1].h))
+
     #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
     CommonMethods.ShowImage(im)
