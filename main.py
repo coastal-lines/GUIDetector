@@ -29,7 +29,7 @@ class VerticalLines():
         self.w = w
         self.h = h
 
-class HorizontalLines():
+class Cell():
     def __init__(self, x, y, w, h):
         self.x = x
         self.y = y
@@ -151,7 +151,7 @@ def DetectCells():
         #x = x + tableArea.x
         #y = y + tableArea.y
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
-        horizontalLinesArray.append(HorizontalLines(x, y, w, h))
+        horizontalLinesArray.append(Cell(x, y, w, h))
 
     #vertical lines
     for i in range(len(cntsV[0])):
@@ -166,8 +166,7 @@ def DetectCells():
     #CommonMethods.ShowImage(table)
 
 def DetectCells2():
-    horizontalLinesArray = []
-    verticalLinesArray = []
+    cells = []
 
     im = cv2.imread(r"C:\Temp2\Flash\MyLabeling\ORB\FullTests2table.png")
     table = cv2.imread(r"C:\Temp2\Flash\MyLabeling\ORB\FullTests2table.png", 0)
@@ -184,7 +183,7 @@ def DetectCells2():
         x, y, w, h = cv2.boundingRect(cntsH[0][position])
         if(w > h and w > 10 and h > 10):
                 cv2.rectangle(im, (x, y), (x + w, y + h), (0, 0, 255), 1)
-                horizontalLinesArray.append(HorizontalLines(x, y, w, h))
+                cells.append(Cell(x, y, w, h))
                 cv2.putText(im, str(i), (x+5, y+5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 12), 2)
 
     #cntsV = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -201,13 +200,13 @@ def DetectCells2():
     y_cell = 1 + 1
     #x = verticalLinesArray[x_cell - 1].x
     #w = verticalLinesArray[x_cell].x - x
-    y = horizontalLinesArray[y_cell - 1].y
-    h = horizontalLinesArray[y_cell].y - y
+    y = cells[y_cell - 1].y
+    h = cells[y_cell].y - y
 
     #print(x, w, y, h)
 
     #print(str(verticalLinesArray[1].x) + " " + str(verticalLinesArray[1].y) + " " + str(verticalLinesArray[1].w) + " " + str(verticalLinesArray[1].h))
-    print(str(horizontalLinesArray[1].x) + " " + str(horizontalLinesArray[1].y) + " " + str(horizontalLinesArray[1].w) + " " + str(horizontalLinesArray[1].h))
+    print(str(cells[1].x) + " " + str(cells[1].y) + " " + str(cells[1].w) + " " + str(cells[1].h))
 
     #cv2.rectangle(im, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
