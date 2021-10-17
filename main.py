@@ -229,10 +229,15 @@ def ConvertCellsToTable(img, cells):
 
     array = np.array(cells)
     table = array.reshape(rows, columns)
-    df = pd.DataFrame(table, columns=['a', 'b', 'c', 'd'])
-    for index, row in df.iterrows():
-        print(row['a'].x, row['b'].x, row['c'].x, row['d'].x)
-    #CommonMethods.ShowImage(img)
+
+    return img, table
+
+def SelectCell(img, table, column, row):
+    column = column - 1
+    row = row - 1
+    cv2.rectangle(img, (table[column, row].x, table[column, row].y), (table[column, row].x + table[column, row].w, table[column, row].y + table[column, row].h),
+                  (0, 0, 0), 2)
+    CommonMethods.ShowImage(img)
 
 #Filter()
 #TestN()
@@ -240,6 +245,6 @@ def ConvertCellsToTable(img, cells):
 #ApplyB()
 #Table()
 img,cells = DetectCells2()
-print(len(cells))
-ConvertCellsToTable(img,cells)
+img, table = ConvertCellsToTable(img,cells)
+SelectCell(img, table, 2, 2)
 #CommonMethods.ShowImage(img)
