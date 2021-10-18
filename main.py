@@ -11,6 +11,7 @@ from Helpers.Threshold import Threshold
 from Helpers.ImageConverters import ImageConverters
 from Helpers.Filters.ImageFilters import ImageFilters
 from Helpers.MorphologicalOperations import MorphologicalOperations
+from Helpers.OCR.TesseractClass import TesseractOCR
 
 
 # работать нужно не с кропнутым изображением, а с регионом!
@@ -23,7 +24,7 @@ class Cell():
         self.h = h
 
 
-img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\ORB\FullTests2.png')
+img = ImageLoaders.LoadImage(r'C:\Temp\!my\TestsTab\Tests.bmp')
 img_resized = CommonMethods.Resize(img, 1919, 1079)
 height, width, channels = img.shape
 w_coef = 1919 / width
@@ -48,7 +49,7 @@ def CalculateRectangle(x, y, width, heigth):
 
 
 def Filter():
-    x = 70
+    x = 15
     y = 245
     width = 257
     heigth = 580
@@ -61,7 +62,7 @@ def Filter():
 
 
 def TestN():
-    x = 80
+    x = 30
     y = 618
     width = 225
     heigth = 44
@@ -74,7 +75,7 @@ def TestN():
 
 
 def TestS():
-    x = 80
+    x = 30
     y = 690
     width = 228
     heigth = 29
@@ -87,7 +88,7 @@ def TestS():
 
 
 def ApplyB():
-    x = 80
+    x = 30
     y = 740
     width = 230
     heigth = 37
@@ -100,10 +101,10 @@ def ApplyB():
 
 
 def Table():
-    x = 330
+    x = 275
     y = 223
-    width = 1583
-    heigth = 785
+    width = 1630
+    heigth = 740
 
     x, y, width, heigth = CalculateRectangle(x, y, width, heigth)
 
@@ -117,35 +118,51 @@ def DetectCells(img, x, y, width, heigth):
     cells = []
 
     img_table = CommonMethods.MaskForRoi(img, x, y, width, heigth)
-    #img_table = cv2.imread(r"C:\Temp2\Flash\MyLabeling\ORB\FullTests2table.png")
+    #img_table = ImageLoaders.LoadImage(r'C:\Temp\Photos\table_bmp.bmp')
     img_bw = ImageConverters.ConvertToBW(img_table)
     th = Threshold.AdaptiveThreshold(img_bw, 255, 11, 8)
     erosion = MorphologicalOperations.Erosion(th)
-    CommonMethods.ShowImage(erosion)
-    cntsH = cv2.findContours(erosion, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    blur = ImageFilters.Blur(erosion)
+    #CommonMethods.ShowImage(img_table)
+    contours = Countours.GetContours(blur)
+    print(len(contours[0]))
 
     # seaching cells
-    for i in range(len(cntsH[0])):
-        position = len(cntsH[0]) - (i + 1)  # нужен реверс т.к. отсчет идет с правой стороны
-        x, y, w, h = cv2.boundingRect(cntsH[0][position])
-        if (w > h and w > 10 and h > 10 and h < 40):  # нужно доработать алгоритм исключения выбросов
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 1)
+    for i in range(len(contours[0])):
+        position = len(contours[0]) - (i + 1)  # нужен реверс т.к. отсчет идет с правой стороны
+        x, y, w, h = cv2.boundingRect(contours[0][position])
+        if (w > h and w > 10 and h > 20 and h < 40):  # нужно доработать алгоритм исключения выбросов
+            cv2.rectangle(img_table, (x, y), (x + w, y + h), (0, 0, 255), 1)
             cells.append(Cell(x, y, w, h))
 
+    #CommonMethods.ShowImage(img_table)
     return img, cells
 
-
 def ConvertCellsToTable(cells):
+    #ищем минимальное Х чтобы определить границу таблицы
+    list_x  = []
+    for i in cells:
+        list_x.append(i.x)
+    min_x = min(list_x)
+    print(min_x)
+
+    # ищем минимальное Y чтобы определить границу таблицы
+    list_y  = []
+    for i in cells:
+        list_y.append(i.y)
+    min_y = min(list_y)
+    print(min_y)
+
     # calculate columns
     columns = 0
     for c in cells:
-        if (c.y == 0):
+        if (c.y == min_y):
             columns = columns + 1
 
     # calculate rows
     rows = 0
     for c in cells:
-        if (c.x == 0):
+        if (c.x == min_x):
             rows = rows + 1
 
     array = np.array(cells)
@@ -160,8 +177,7 @@ def SelectCell(img, table, column, row):
     cv2.rectangle(img, (table[column, row].x, table[column, row].y),
                   (table[column, row].x + table[column, row].w, table[column, row].y + table[column, row].h),
                   (0, 0, 0), 2)
-    CommonMethods.ShowImage(img)
-
+    return table[column, row]
 
 Filter()
 TestN()
@@ -169,6 +185,11 @@ TestS()
 ApplyB()
 x, y, width, heigth = Table()
 img, cells = DetectCells(img, x, y, width, heigth)
-#table = ConvertCellsToTable(cells)
-#SelectCell(img, table, 2, 2)
+table = ConvertCellsToTable(cells)
+
+
+cell = SelectCell(img, table, 2, 2)
+crop = CommonMethods.CropImage(img, cell.x, cell.y, cell.w, cell.h)
+text = TesseractOCR.GetTextFromImage(crop)
+
 CommonMethods.ShowImage(img)
