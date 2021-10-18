@@ -7,8 +7,7 @@ class CommonMethods():
         img = image[y:y + h, x:x + w]
         return img
 
-    def MaskForRoi(img, contour):
-        x, y, w, h = cv2.boundingRect(contour)
+    def MaskForRoi(img, x, y, w, h):
         mask = np.zeros(img.shape[:2], np.uint8)
         mask[y:y + h, x:x + w] = 255
         masked_img = cv2.bitwise_and(img, img, mask=mask)
@@ -35,3 +34,4 @@ class CommonMethods():
 
     def GetPercent(number, percent):
         return round((number / 100) * percent)
+
