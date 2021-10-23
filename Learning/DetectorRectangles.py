@@ -14,6 +14,11 @@ from Helpers.MorphologicalOperations import MorphologicalOperations
 from Helpers.OCR.TesseractClass import TesseractOCR
 from Helpers.FeatureExtractors.Contours import Countours
 
+arr = set()
+#arr = {(100, "John"), (200, "Anna")}
+arr.add((300, "Lena"))
+print(arr)
+
 #паттерн был сделан с разрешением 1920*1200 монитора и имеет размер 420*200
 #текущий экран 1600*1200
 #находим все прямоугольники и сжимаем их до соответствующих пропорций т.е. подгоняя под 1920*1200
@@ -33,9 +38,6 @@ blur = ImageFilters.Blur(erosion)
 contours, hierarchy = Countours.GetContours(blur)
 print(len(contours))
 
-matches = [0,9,5,3,4,1]
-matches.sort(reverse=True)
-
 def Comparator(pattern, roi):
     match_count = 0
     for i in range(128):
@@ -46,6 +48,7 @@ def Comparator(pattern, roi):
     return match_count
 
 matches = []
+matches_set = set()
 for contour in contours:
     x, y, w, h = cv2.boundingRect(contour)
     point1 = (x, y)
@@ -59,6 +62,7 @@ for contour in contours:
     match = Comparator(pattern_resized, roi_resized)
     print(match)
     matches.append(match)
+    matches_set.add((match, contour))
 
 matches.sort(reverse=True)
 print("max_match: ")
