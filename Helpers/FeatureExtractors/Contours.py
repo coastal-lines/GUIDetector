@@ -1,6 +1,7 @@
 import cv2
 from decimal import Decimal
 from Helpers.ImageLoaders import ImageLoaders
+import numpy as np
 
 class Countours():
 
@@ -42,3 +43,9 @@ class Countours():
                 ImageLoaders.Serialize(cnt)
                 #print(w)
                 return cnt
+
+    def GetBoxFromContour(contour):
+        rect = cv2.minAreaRect(contour) # пытаемся вписать прямоугольник
+        box = cv2.boxPoints(rect) # поиск четырех вершин прямоугольника
+        box = np.int0(box) # округление координат
+        return box

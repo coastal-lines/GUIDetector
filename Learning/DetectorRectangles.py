@@ -51,14 +51,21 @@ for contour in contours:
     point2 = (x + w, y + h)
     if w > 600 and h > 600:
         #cv2.rectangle(current_screen, point1, point2, (0, 255, 0), 1)
-        roi = CommonMethods.CropImageFromContour(current_screen, contour)
+
+        rect = cv2.minAreaRect(contour) # пытаемся вписать прямоугольник
+        box = cv2.boxPoints(rect) # поиск четырех вершин прямоугольника
+        box = np.int0(box) # округление координат
+        print(box)
+
+        roi = CommonMethods.CropImageFromContour(current_screen, box)
         roi_bw = ImageConverters.ConvertToBW(roi)
         pattern_bw = ImageConverters.ConvertToBW(pattern)
         pattern_resized = CommonMethods.Resize(pattern_bw, range_value, range_value)
         roi_resized = CommonMethods.Resize(roi_bw, range_value, range_value)
         match = Comparator(pattern_resized, roi_resized)
+        #temp.append((match, contour))
         temp.append((match, contour))
-        print(match)
+        #print(match)
         #matches.append(match)
         #matches_set.add(contour)
         #count += 1
@@ -71,4 +78,5 @@ print(sorted_multi_list[0])
 Countours.DrawRectangle(sorted_multi_list[0][1],current_screen)
 Countours.DrawRectangle(sorted_multi_list[1][1],current_screen)
 Countours.DrawRectangle(sorted_multi_list[2][1],current_screen)
+
 CommonMethods.ShowImage(current_screen)
