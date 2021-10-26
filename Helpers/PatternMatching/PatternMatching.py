@@ -23,3 +23,14 @@ class PatternMatching():
         point2 = (x + w, y + h)
 
         return point1, point2
+
+    def ComparePixelByPixel(pattern, roi):
+        range_value = 128
+
+        match_count = 0
+        for i in range(range_value):
+            for j in range(range_value):
+                if (pattern[i][j] == roi[i][j]):
+                    match_count += 1
+
+        return match_count
