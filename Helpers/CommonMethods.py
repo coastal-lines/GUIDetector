@@ -23,6 +23,11 @@ class CommonMethods():
         cv2.imshow("", image)
         cv2.waitKey(0)
 
+    def ShowTwoImages(image1, image2):
+        cv2.imshow("1", image1)
+        cv2.imshow("2", image2)
+        cv2.waitKey(0)
+
     def GetMedian(image):
         #медиана - половина массива меньше этого значения, а половина больше
         median_intensity = np.median(image)

@@ -49,34 +49,35 @@ for contour in contours:
     x, y, w, h = cv2.boundingRect(contour)
     point1 = (x, y)
     point2 = (x + w, y + h)
-    if w > 600 and h > 600:
-        #cv2.rectangle(current_screen, point1, point2, (0, 255, 0), 1)
+    cv2.rectangle(current_screen, point1, point2, (0, 255, 0), 1)
+    if(w > 900):
+        ##if w > 300 and h > 300:
+        rect = cv2.minAreaRect(contour)  # пытаемся вписать прямоугольник
+        box = cv2.boxPoints(rect)  # поиск четырех вершин прямоугольника
+        box = np.int0(box)  # округление координат
 
-        rect = cv2.minAreaRect(contour) # пытаемся вписать прямоугольник
-        box = cv2.boxPoints(rect) # поиск четырех вершин прямоугольника
-        box = np.int0(box) # округление координат
-        print(box)
-
-        roi = CommonMethods.CropImageFromContour(current_screen, box)
+        # roi = CommonMethods.CropImageFromContour(current_screen, box)
+        roi = CommonMethods.CropImage(current_screen, x, y, w, h)
         roi_bw = ImageConverters.ConvertToBW(roi)
         pattern_bw = ImageConverters.ConvertToBW(pattern)
         pattern_resized = CommonMethods.Resize(pattern_bw, range_value, range_value)
         roi_resized = CommonMethods.Resize(roi_bw, range_value, range_value)
         match = Comparator(pattern_resized, roi_resized)
-        #temp.append((match, contour))
+        # temp.append((match, contour))
         temp.append((match, contour))
-        #print(match)
-        #matches.append(match)
-        #matches_set.add(contour)
-        #count += 1
-        #if count > 5:
+        print(match)
+        # matches.append(match)
+        # matches_set.add(contour)
+        # count += 1
+        # if count > 5:
         #    break
+
+
 
 print("========")
 sorted_multi_list = sorted(temp, key=lambda x: x[0], reverse=True)
-print(sorted_multi_list[0])
-Countours.DrawRectangle(sorted_multi_list[0][1],current_screen)
-Countours.DrawRectangle(sorted_multi_list[1][1],current_screen)
-Countours.DrawRectangle(sorted_multi_list[2][1],current_screen)
+for i in range(len(sorted_multi_list)):
+    cv2.drawContours(current_screen, [Countours.GetBoxFromContour(sorted_multi_list[i][1])], 0, (0, 0, 0), 3)
 
 CommonMethods.ShowImage(current_screen)
+print(len(temp))
