@@ -15,38 +15,101 @@ from Helpers.OCR.TesseractClass import TesseractOCR
 from Helpers.FeatureExtractors.Contours import Countours
 from Helpers.PatternMatching.PatternMatching import PatternMatching
 
+#нужно добавлять черные отступы к темплейту, судя по всему
+#иначе главные контуры пропускаются
+
+def Preprocessing():
+    sharp = ImageFilters.Sharp(img_bw)
+    erosion = MorphologicalOperations.Erosion(sharp)
+    blur = ImageFilters.Blur(erosion)
+    ddept = cv2.CV_16S
+    x = cv2.Sobel(erosion, ddept, 1, 0, ksize=3, scale=10)
+    y = cv2.Sobel(erosion, ddept, 0, 1, ksize=3, scale=10)
+    absx = cv2.convertScaleAbs(x)
+    absy = cv2.convertScaleAbs(y)
+    edge = cv2.addWeighted(absx, 0.5, absy, 0.5, 1)
+
+
+
+def findContournsByDifferentWays(img_bw):
+    contours = None
+
+    sharp = ImageFilters.Sharp(img_bw)
+    erosion = MorphologicalOperations.Erosion(sharp)
+    blur = ImageFilters.Blur(erosion)
+    ddept = cv2.CV_16S
+    x = cv2.Sobel(erosion, ddept, 1, 0, ksize=3, scale=10)
+    y = cv2.Sobel(erosion, ddept, 0, 1, ksize=3, scale=10)
+    absx = cv2.convertScaleAbs(x)
+    absy = cv2.convertScaleAbs(y)
+    edge = cv2.addWeighted(absx, 0.5, absy, 0.5, 1)
+
+    contoursCannyEdge, hierarchy  = Countours.GetContoursByCanny(edge, 220, 255)
+    print(type(contoursCannyEdge))
+
+    th = Threshold.AdaptiveThreshold(erosion, 255, 11, 8)
+    contoursCannyThreshold, hierarchy  = Countours.GetContoursByCanny(th, 220, 255)
+    print(type(contoursCannyThreshold))
+
+    blur = ImageFilters.Blur(img_bw)
+    th = Threshold.InRangeThreshold(blur, 245, 255)
+    contoursTh, hierarchy = Countours.GetContours(th)
+
+    contours = contoursCannyEdge
+    contours.extend(contoursCannyThreshold)
+    contours.extend(contoursTh)
+
+    return contours
+
 #11351 match
-pattern = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\TestSimpleComparing\pattern2.png')
-pattern_bw = ImageConverters.ConvertToBW(pattern)
-img = ImageLoaders.LoadImage(r'C:\Temp2\Flash\MyLabeling\CustomWindow.png')
+#loading files
+#pattern = ImageLoaders.LoadImage(r'C:\Temp\!my\TestsTab\TestsMainTab.bmp')
+#pattern_bw = ImageConverters.ConvertToBW(pattern)
+img = ImageLoaders.LoadImage(r'C:\Temp\!my\TestsTab\TestsLowScreen.bmp')
 img_bw = ImageConverters.ConvertToBW(img)
-sharp = ImageFilters.Sharp(img_bw)
-erosion = MorphologicalOperations.Erosion(sharp)
-blur = ImageFilters.Blur(erosion)
+#filter = ImageLoaders.LoadImage(r'C:\Temp\!my\TestsTab\Filter.bmp')
+#filter_bw = ImageConverters.ConvertToBW(filter)
+input = ImageLoaders.LoadImage(r'C:\Temp\!my\TestsTab\Input.bmp')
+input_bw = ImageConverters.ConvertToBW(input)
 
-ddept=cv2.CV_16S
-x = cv2.Sobel(erosion, ddept, 1,0, ksize=3, scale=10)
-y = cv2.Sobel(erosion, ddept, 0,1, ksize=3, scale=10)
-absx= cv2.convertScaleAbs(x)
-absy = cv2.convertScaleAbs(y)
-edge = cv2.addWeighted(absx, 0.5, absy, 0.5, 1)
+#calculating average
+#h,w = pattern_bw.shape[:2]
+#h,w = filter_bw.shape[:2]
+h,w = input_bw.shape[:2]
+high_w = w + (w * 1.5)
+high_h = h + (h * 1.5)
+low_w = w - (w / 1.5)
+low_h = h - (h / 1.5)
 
+#searching contours
 range_value = 128
-contours, hierarchy = Countours.GetContoursByCanny(edge,220,255)
+
+contours = findContournsByDifferentWays(img_bw)
 for cnt in contours:
     x, y, w, h = cv2.boundingRect(cnt)
     point1 = (x, y)
     point2 = (x + w, y + h)
-    cv2.rectangle(img, point1, point2, (255, 255, 0), 3)
-    roi = CommonMethods.CropImage(img_bw, x, y, w, h)
+    cv2.rectangle(img, point1, point2, (25, 0, 255), 1)
 
-    pattern_resized = CommonMethods.Resize(pattern_bw, range_value, range_value)
-    roi_resized = CommonMethods.Resize(roi, range_value, range_value)
+    if(w > low_w and w < high_w and h > low_h and h < high_h):
+        #cv2.rectangle(img, point1, point2, (255, 255, 0), 1)
+        roi = CommonMethods.CropImage(img_bw, x, y, w, h)
+        p = PatternMatching.ComparePixelByPixel(input_bw,roi)
+        print(p)
+        if(p == 172949):
+            cv2.rectangle(img, point1, point2, (255, 60, 255), 4)
+        #if(p == 199023):
+         #   cv2.rectangle(img, point1, point2, (255, 60, 255), 4)
+        #if(p == 199023):
+         #   cv2.rectangle(img, point1, point2, (255, 60, 255), 4)
 
-    p = PatternMatching.ComparePixelByPixel(pattern_resized,roi_resized)
-    print(p)
 
-th = Threshold.AdaptiveThreshold(erosion,255,11,8)
-image = cv2.resize(img, (1400, 800))
+    #pattern_resized = CommonMethods.Resize(pattern_bw, range_value, range_value)
+    #roi_resized = CommonMethods.Resize(roi, range_value, range_value)
+
+
+
+
+image = cv2.resize(img, (1400, 1000))
 cv2.imshow("", image)
 cv2.waitKey(0)
