@@ -97,7 +97,7 @@ def Comparing(contours, element, mainScreen):
             point1 = (x, y)
             point2 = (x + w, y + h)
             pattern_matches.append([matches, point1, point2])
-            print(matches)
+            #print(matches)
             #print(point1)
             #print(point2)
 
@@ -112,8 +112,8 @@ def GetTheBestContourMatch(pattern_matches, bestPosition):
 
     tempMatch.sort(reverse=True)
     maxMatch = tempMatch[bestPosition]
-    print("maxMatch:")
-    print(maxMatch)
+    #print("maxMatch:")
+    #print(maxMatch)
 
     for i in range(len(pattern_matches)):
         if (i != 0) and (pattern_matches[i][0] == maxMatch):
@@ -130,6 +130,25 @@ def SearchElement(contours, element, screenshot, bestPosition):
     el = Element(element, point1, point2)
     return el
 
+def GetCropComparison(el, pattern):
+    pattern_w = pattern.shape[:2][1]
+    pattern_h = pattern.shape[:2][0]
+    roi_w = pattern.shape[:2][1]
+    roi_h = pattern.shape[:2][0]
+    X1 = el.point2[:2][0] - pattern_w
+    Y1 = el.point2[:2][1] - pattern_h
+
+    if(X1 > 0 and Y1 > 0):
+        roi = CommonMethods.CropImage(screenshot_bw, X1, Y1, roi_w, roi_h)
+        roi_resized = CommonMethods.Resize(roi, pattern_w, pattern_h)
+
+        matches = 0
+        for i in range(pattern_h):
+            for j in range(pattern_w):
+                if (pattern[i][j] == roi_resized[i][j]):
+                    matches += 1
+        print(matches)
+
 def SearchBest10Mathces(contours, element, screenshot, customRange):
     element_matches = Comparing(contours, element, screenshot)
 
@@ -139,13 +158,18 @@ def SearchBest10Mathces(contours, element, screenshot, customRange):
                 point1, point2 = GetTheBestContourMatch(element_matches, position)
                 el = Element(element, point1, point2)
                 Countours.DrawRectangleByPoints(el.point1, el.point2, screen, (0, 60, 255), 4)
+                GetCropComparison(el, Subject)
                 position += 1
-
                 continue
 
             point1, point2 = GetTheBestContourMatch(element_matches, position)
             el = Element(element, point1, point2)
-            Countours.DrawRectangleByPoints(el.point1, el.point2, screen, (255, 60, 255), 4)
+            GetCropComparison(el, Subject)
+
+            #Countours.DrawRectangleByPoints(el.point1, el.point2, screen, (255, 60, 255), 4)
+            if(position == 11):
+                GetCropComparison(el, Subject)
+                cv2.putText(screen, str(position), (el.point1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 5, 25), 2, cv2.LINE_AA)
 
             position += 1
 
