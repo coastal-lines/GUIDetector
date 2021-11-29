@@ -114,12 +114,12 @@ filter_roi_bw, filter_crop = GetfilterRoi(screenshot, screenshot_bw)
 ExpandFilter(filter_roi_bw)
 my_contour_roi = LastWord()
 
-
 scrollDownPattern = cv2.imread(r'c:\Temp\!my\AuditTab\buttonDOWN.png', 0)
 point1, point2 = PatternMatching.DetectByPatternMatching(my_contour_roi, scrollDownPattern)
 s = CommonMethods.GetScreenshot()
 Countours.DrawRectangleByPoints(point1, point2, s, [255,0,255], 2)
 x, y = GetCentreOfElement(point1, point2)
+
 pyautogui.click(x, y)
 pyautogui.click(x, y)
 pyautogui.click(x, y)
