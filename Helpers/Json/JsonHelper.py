@@ -1,7 +1,9 @@
 import json
-from Helpers.Json.PatternsModel import Element
+from Helpers.Json.PatternsModel import Element, LabeledData
 
-with open(r"c:\Temp\Photos\data\json.json") as jsonfile:
-    my_json = json.load(jsonfile)
-my_object = Element(my_json)
-t=0
+
+def OpenJsonFile():
+    with open(r"c:\Temp\Photos\data\json.json") as jsonfile:
+        my_json = json.load(jsonfile)
+    my_object = LabeledData(my_json)
+    return my_object
