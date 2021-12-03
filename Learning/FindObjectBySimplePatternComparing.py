@@ -14,18 +14,4 @@ from Helpers.MorphologicalOperations import MorphologicalOperations
 from Helpers.OCR.TesseractClass import TesseractOCR
 from Helpers.FeatureExtractors.Contours import Countours
 from Helpers.PatternMatching.PatternMatching import PatternMatching
-from Helpers.FeatureExtractors import Contours
-import pyautogui
 
-#load
-main = ImageLoaders.LoadImage(r"C:\Temp2\Flash\MyLabeling\Tests.bmp")
-main_bw = ImageConverters.ConvertToBW(main)
-
-#filters
-sharp = ImageFilters.Sharp(main_bw)
-erosion = MorphologicalOperations.Erosion(sharp)
-
-
-
-#test
-CommonMethods.ShowImage(erosion)
