@@ -3,7 +3,7 @@ from decimal import Decimal
 from Helpers.ImageLoaders import ImageLoaders
 import numpy as np
 
-class Countours():
+class Contours():
 
     def GetContours(image_bw):
         contours, hierarchy = cv2.findContours(image_bw, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)

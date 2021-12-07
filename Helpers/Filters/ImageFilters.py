@@ -21,3 +21,4 @@ class ImageFilters():
         table = np.array(table, np.uint8)
         img = cv2.LUT(img, table)
         return img
+

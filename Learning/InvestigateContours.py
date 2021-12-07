@@ -25,6 +25,7 @@ main_bw = ImageConverters.ConvertToBW(main)
 sharp = ImageFilters.Sharp(main_bw)
 erosion = MorphologicalOperations.Erosion(sharp)
 
+#sobel
 
 
 #test
