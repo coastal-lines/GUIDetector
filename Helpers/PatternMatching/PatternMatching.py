@@ -1,4 +1,6 @@
 import cv2 as cv
+from Helpers.CommonMethods import CommonMethods
+from Helpers.FeatureExtractors.Contours import Contours
 
 class PatternMatching():
 
@@ -25,12 +27,30 @@ class PatternMatching():
         return point1, point2
 
     def ComparePixelByPixel(pattern, roi):
-        range_value = 128
+        range_value = 512
+
+        pattern_resized = CommonMethods.Resize(pattern, range_value, range_value)
+        roi_resized = CommonMethods.Resize(roi, range_value, range_value)
 
         match_count = 0
         for i in range(range_value):
             for j in range(range_value):
+                if (pattern_resized[i][j] == roi_resized[i][j]):
+                    match_count += 1
+
+        return match_count
+
+    def ComparePixelByPixelWithoutResizing(pattern, roi):
+        h,w = roi.shape[:2]
+        match_count = 0
+
+        for i in range(h):
+            for j in range(w):
                 if (pattern[i][j] == roi[i][j]):
                     match_count += 1
 
         return match_count
+
+    def FindPatternAndDrawRectange(img, pattern):
+        p1, p2 = PatternMatching.DetectByPatternMatching(img, pattern)
+        Contours.DrawRectangleByPoints(p1, p2, img, [0, 0, 0], 4)
