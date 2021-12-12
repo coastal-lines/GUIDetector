@@ -14,6 +14,11 @@ from Helpers.MorphologicalOperations import MorphologicalOperations
 from Helpers.OCR.TesseractClass import TesseractOCR
 from Helpers.FeatureExtractors.Contours import Contours
 from Helpers.Json.PatternsModel import Element, LabeledData
+from Helpers.PatternMatching.PatternMatching import PatternMatching
+
+#Debug
+#instead of using the screenshot
+main_screen = ImageLoaders.LoadBWImage("C:\Temp\Photos\Tests.bmp")
 
 #Step1 - upload json
 json_object = JsonHelper.OpenJsonFile()
@@ -25,9 +30,13 @@ def GetElementByName(element_name):
         if(elements_list[i]["name"] == element_name):
             return elements_list[i]
 
-filter_test = GetElementByName("filter_tests")
 
+element_filter_test = GetElementByName("filter_tests")
+filter_test_bw = ImageLoaders.LoadBWImage(element_filter_test["ImagePath"])
+p1, p2 = PatternMatching.DetectByPatternMatching(main_screen, filter_test_bw)
+element_filter_test["TestData"]
+
+#Debug
 #test
-s = CommonMethods.GetScreenshot()
-Contours.DrawRectangle(c, s)
-CommonMethods.ShowImage(s)
+Contours.DrawRectangleByPointsAndPrintText(main_screen, p1, p2, element_filter_test["name"])
+CommonMethods.ShowImage(main_screen)

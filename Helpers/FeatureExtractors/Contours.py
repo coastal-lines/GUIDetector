@@ -30,8 +30,13 @@ class Contours():
             point2 = (x + w, y + h)
             cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
 
-    def DrawRectangleByPoints(point1, point2, image):
-        cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
+    def DrawRectangleByPoints(image, point1, point2):
+        cv2.rectangle(image, point1, point2, (0, 255, 0), 2)
+
+    def DrawRectangleByPointsAndPrintText(image, point1, point2, text):
+        font = cv2.FONT_HERSHEY_COMPLEX
+        cv2.putText(image, text, (point2[0], point1[1]), font, 1, (0, 0, 0), 1)
+        cv2.rectangle(image, point1, point2, (0, 255, 0), 2)
 
     def DrawRectangleByBox(box, image):
         cv2.rectangle(image, [box], (0, 255, 0), 1)
@@ -42,7 +47,7 @@ class Contours():
             if (w > 209 and h > 550) and (w < 270 and h < 590):
                 point1 = (x, y)
                 point2 = (x + w, y + h)
-                cv2.rectangle(image, point1, point2, (0, 255, 0), 1)
+                cv2.rectangle(image, point1, point2, (0, 255, 0), 2)
                 ImageLoaders.Serialize(cnt)
                 #print(w)
                 return cnt
