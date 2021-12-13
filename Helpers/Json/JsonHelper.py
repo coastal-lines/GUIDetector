@@ -1,5 +1,5 @@
 import json
-from Helpers.Json.PatternsModel import Element, LabeledData
+from Helpers.Json.LabeledData import OriginalElement, LabeledData
 
 
 def OpenJsonFile():

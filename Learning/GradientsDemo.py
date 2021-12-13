@@ -14,7 +14,7 @@ from Helpers.ImageConverters import ImageConverters
 from Helpers.Filters.ImageFilters import ImageFilters
 from Helpers.MorphologicalOperations import MorphologicalOperations
 from Helpers.OCR.TesseractClass import TesseractOCR
-from Helpers.Json.PatternsModel import Element, LabeledData
+from Helpers.Json.LabeledData import Element, LabeledData
 
 main = ImageLoaders.LoadImage(r"C:\Temp2\Flash\MyLabeling\Tests.bmp")
 main_bw = ImageConverters.ConvertToBW(main)

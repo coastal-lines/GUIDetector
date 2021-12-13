@@ -35,7 +35,7 @@ class Contours():
 
     def DrawRectangleByPointsAndPrintText(image, point1, point2, text):
         font = cv2.FONT_HERSHEY_COMPLEX
-        cv2.putText(image, text, (point2[0], point1[1]), font, 1, (0, 0, 0), 1)
+        cv2.putText(image, text, (point2[0], point1[1]), font, 1, (0, 255, 0), 1)
         cv2.rectangle(image, point1, point2, (0, 255, 0), 2)
 
     def DrawRectangleByBox(box, image):

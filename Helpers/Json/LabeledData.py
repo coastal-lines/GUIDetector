@@ -1,13 +1,5 @@
 from typing import List
 
-class TestData:
-    p1: tuple
-    p2: tuple
-
-    def __init__(self, p1: tuple, p2: tuple):
-        self.p1 = p1
-        self.p2 = p2
-
 class Color:
     active: str
     nonactive: str
@@ -24,7 +16,7 @@ class Scroll:
         self.horizontal = horizontal
         self.vertical = vertical
 
-class Element:
+class OriginalElement:
     name: str
     type: str
     width: int
@@ -37,9 +29,8 @@ class Element:
     ImagePath: str
     ScreenResolution: List[int]
     findBy: str
-    TestData: TestData
 
-    def __init__(self, name: str, type: str, width: int, heigth: int, parent: str, color: Color, text: str, columns: List[str], scroll: Scroll, ImagePath: str, ScreenResolution: List[int], findBy: str, TestData: TestData):
+    def __init__(self, name: str, type: str, width: int, heigth: int, parent: str, color: Color, text: str, columns: List[str], scroll: Scroll, ImagePath: str, ScreenResolution: List[int], findBy: str):
         self.name = name
         self.type = type
         self.width = width
@@ -52,10 +43,9 @@ class Element:
         self.ImagePath = ImagePath
         self.ScreenResolution = ScreenResolution
         self.findBy = findBy
-        self.TestData = None
 
 class LabeledData:
-    elements: List[Element]
+    elements: List[OriginalElement]
 
-    def __init__(self, elements: List[Element]):
+    def __init__(self, elements: List[OriginalElement]):
         self.elements = elements
