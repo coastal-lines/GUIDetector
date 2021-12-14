@@ -26,8 +26,8 @@ class Element:
 
 #Debug
 #instead of using the screenshot
-main_screen = ImageLoaders.LoadImage("C:\Temp\Photos\Tests.bmp")
-main_screen_bw = ImageLoaders.LoadBWImage("C:\Temp\Photos\Tests.bmp")
+main_screen = ImageLoaders.LoadImage("C:\Temp\Photos\Tests2.bmp")
+main_screen_bw = ImageLoaders.LoadBWImage("C:\Temp\Photos\Tests2.bmp")
 
 #Step1 - upload json
 json_object = JsonHelper.OpenJsonFile()
@@ -53,7 +53,7 @@ draft = GetElementByName("draft")
 draft_bw = ImageLoaders.LoadBWImage(draft["ImagePath"])
 p3, p4 = PatternMatching.DetectByPatternMatching(element_filter_test.roi, draft_bw)
 element_draft = Element(None, p3, p4, draft)
-Contours.DrawRectangleByPointsAndPrintText(main_screen, p3, p4, draft["name"])
+#Contours.DrawRectangleByPointsAndPrintText(main_screen, p3, p4, draft["name"])
 
 # Step 4 - find the dropdown and read all items from this
 subject = GetElementByName("subject")
@@ -61,10 +61,11 @@ subject_bw = ImageLoaders.LoadBWImage(subject["ImagePath"])
 #find dropdown button - TODO
 p5, p6 = PatternMatching.DetectByPatternMatching(element_filter_test.roi, subject_bw)
 element_subject = Element(None, p5, p6, subject)
-Contours.DrawRectangleByPointsAndPrintText(main_screen, p5, p6, subject["name"])
+#Contours.DrawRectangleByPointsAndPrintText(main_screen, p5, p6, subject["name"])
 #ActionsForElements.ClickOnTheCentreOfTheElement(p5, p6)
-
-
+list_subject = ImageLoaders.LoadBWImage("C:\Temp\Photos\data\list_subjects2.bmp")
+p7, p8 = PatternMatching.DetectByPatternMatching(element_filter_test.roi, list_subject)
+Contours.DrawRectangleByPointsAndPrintText(main_screen, p7, p8, "list")
 
 
 #Debug
