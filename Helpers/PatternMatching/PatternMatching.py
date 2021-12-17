@@ -32,7 +32,7 @@ class PatternMatching():
         h, w = template.shape
 
         # - TM_SQDIFF метод квадратов разностей. Идеальное совпадение, если сумма квадратов разностей равна 0
-        res = cv.matchTemplate(img_gray, template, cv.TM_CCOEFF)
+        res = cv.matchTemplate(img_gray, template, cv.TM_CCOEFF_NORMED)
 
         return res
 
