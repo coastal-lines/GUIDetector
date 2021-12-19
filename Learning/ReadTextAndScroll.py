@@ -33,7 +33,31 @@ up_button = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\up_button.bmp")
 down_button = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\down_button.bmp")
 up_button_p1, up_button_p2 = PatternMatching.DetectByPatternMatchingTM_CCOEFF_NORMED(main_screen_bw, up_button)
 down_button_p1, down_button_p2 = PatternMatching.DetectByPatternMatchingTM_CCOEFF_NORMED(main_screen_bw, down_button)
-Contours.DrawRectangleByPoints(main_screen, up_button_p1, up_button_p2)
-Contours.DrawRectangleByPoints(main_screen, down_button_p1, down_button_p2)
+#check that buttons are on the same line
+if(up_button_p1[0] >= (down_button_p1[0] - 2) and up_button_p1[0] <= (down_button_p1[0] + 2)):
+    print("this is scroll")
+    #Contours.DrawRectangleByPoints(main_screen, up_button_p1, up_button_p2)
+    #Contours.DrawRectangleByPoints(main_screen, down_button_p1, down_button_p2)
 
-CommonMethods.ShowImage(main_screen)
+#find rectangle for scrollbar
+w, h = CommonMethods.GetImageWidthAndHeigth(up_button)
+scroll_w = w
+scroll_h = down_button_p2[1] - up_button_p1[1]
+scroll_p1 = (up_button_p1[0], up_button_p1[1])
+scroll_p2 = (down_button_p2[0], down_button_p2[1])
+##Contours.DrawRectangleByPoints(main_screen, scroll_p1, scroll_p2)
+
+
+scroll_on_the_top = CommonMethods.CropImageByPoints(main_screen_bw, scroll_p1, scroll_p2)
+best_score = PatternMatching.ComparePixelByPixel(scroll_on_the_top, scroll_on_the_top)
+
+#как проверять, что мы меняем скролл:
+#вырезаем roi для скрола для образца
+#после каждого клика вверх или вниз делаем новое roi для изменившегося скролла
+#сравниваем (наверное можно попиксельно) два изображения
+#если нет никакой разницы - значит мы внизу
+#дополнительно можно проверить паттерном, но только если ползунок не меняет свой размер
+
+
+
+CommonMethods.ShowImageWithOriginalSize(scroll_on_the_top)
