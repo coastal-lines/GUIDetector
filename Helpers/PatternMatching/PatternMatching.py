@@ -32,9 +32,16 @@ class PatternMatching():
         h, w = template.shape
 
         # - TM_SQDIFF метод квадратов разностей. Идеальное совпадение, если сумма квадратов разностей равна 0
-        res = cv.matchTemplate(img_gray, template, cv.TM_CCOEFF_NORMED)
+        result = cv.matchTemplate(img_gray, template, cv.TM_CCOEFF_NORMED)
 
-        return res
+        min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
+        x = max_loc[0]
+        y = max_loc[1]
+
+        point1 = (x, y)
+        point2 = (x + w, y + h)
+
+        return point1, point2
 
     def ComparePixelByPixel(pattern, roi):
         range_value = 512
