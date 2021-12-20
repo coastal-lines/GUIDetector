@@ -20,7 +20,7 @@ import cv2 as cv
 
 main_screen = ImageLoaders.LoadImage("C:\Temp\Photos\Tests2.bmp")
 main_screen_bw = ImageLoaders.LoadBWImage("C:\Temp\Photos\Tests2.bmp")
-list_subject = ImageLoaders.LoadBWImage("C:\Temp\Photos\data\list_subjects2.bmp")
+list_subject = ImageLoaders.LoadBWImage("C:\Temp\Photos\data\list_subjects.bmp")
 result = PatternMatching.DetectByPatternMatchingTM_CCOEFF_NORMED(main_screen_bw, list_subject)
 min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 x = max_loc[0]
@@ -29,5 +29,4 @@ w, h = CommonMethods.GetImageWidthAndHeigth(list_subject)
 point1 = (x, y)
 point2 = (x + w, y + h)
 Contours.DrawRectangleByPoints(main_screen, point1, point2)
-CommonMethods.ShowImage(result)
 CommonMethods.ShowImage(main_screen)
