@@ -36,16 +36,8 @@ down_button = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\down_button.bmp")
 #Contours.DrawRectangleByPoints(main_screen, up_button_p1, up_button_p2)
 #Contours.DrawRectangleByPoints(main_screen, down_button_p1, down_button_p2)
 
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
-ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
+#ActionsForElements.ScrollDown(ActionsForElements, list_roi, up_button, down_button)
+ActionsForElements.ScrollDownWhilePossible(ActionsForElements, main_screen_bw, p1, p2, up_button, down_button)
 
 
 

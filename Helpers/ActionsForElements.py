@@ -1,7 +1,8 @@
+import cv2
 import pyautogui
-from Helpers.PatternMatching.PatternMatching import PatternMatching
-from Helpers.FeatureExtractors.Contours import Contours
 from Helpers.CommonMethods import CommonMethods
+from Helpers.PatternMatching.PatternMatching import PatternMatching
+
 
 class ActionsForElements():
     def GetCentreOfElement(p1, p2):
@@ -39,23 +40,32 @@ class ActionsForElements():
         if(scroll_p1 != None and scroll_p2 != None):
             self.ClickOnTheCentreOfTheElement(self, up_button_p1, up_button_p2)
 
-    def IsTheBottomOfScroll(self, roi_bw, up_button, down_button):
+    def ScrollDownWhilePossible(self, main_screen_bw, p1, p2, up_button, down_button):
+        roi_bw = CommonMethods.MaskForRoiFromPoints(main_screen_bw, p1, p2)
         scroll_p1, scroll_p2, up_button_p1, up_button_p2, down_button_p1, down_button_p2 = self.FindScrollArea(self, roi_bw, up_button, down_button)
 
-        # save start view of scrollbar
-        scroll_before_click = CommonMethods.CropImageByPoints(roi_bw, scroll_p1, scroll_p2)
+        # click down until it is possible
+        condition = False
+        warning_count = 0
+        while(condition == False):
+            # save start view of element
+            roi_before_click = CommonMethods.MaskForRoiFromPoints(main_screen_bw, p1, p2)
 
-        # click down
-        self.ClickOnTheCentreOfTheElement(self, down_button_p1, down_button_p2)
+            # click down
+            self.ClickOnTheCentreOfTheElement(self, down_button_p1, down_button_p2)
 
-        # check bottom condition
-        scroll_after_click = CommonMethods.CropImageByPoints(roi_bw, scroll_p1, scroll_p2)
+            # make new roi
+            temp_roi_bw = CommonMethods.MaskForRoiFromPoints(main_screen_bw, p1, p2)
 
-        # 
-        score = PatternMatching.ComparePixelByPixel(scroll_before_click, scroll_after_click)
-        #if(score_after_click != score_before_click):
-        #    return True
+            # check bottom condition
 
-        #return False
+            score_before = PatternMatching.ComparePixelByPixel(roi_before_click, roi_before_click)
+            score_after = PatternMatching.ComparePixelByPixel(roi_before_click, temp_roi_bw)
+            if(score_before == score_after):
+                condition = True
+
+            warning_count += 1
+            if(warning_count > 100):
+                condition = True
 
 
