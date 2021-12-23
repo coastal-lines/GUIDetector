@@ -92,6 +92,12 @@ class CommonMethods():
         open_cv_image = np.array(screenshot)
         return open_cv_image
 
+    def GetScreenshotBW():
+        screenshot = pyautogui.screenshot()
+        open_cv_image = np.array(screenshot)
+        open_cv_image_bw = cv2.cvtColor(open_cv_image, cv2.COLOR_BGR2GRAY)
+        return open_cv_image_bw
+
     def DoesGrayscaleRegionHaveAColor(image, color):
         w = image.shape[:2][1]
         h = image.shape[:2][0]
