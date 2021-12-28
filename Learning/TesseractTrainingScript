@@ -1,0 +1,10 @@
+Training:
+1 - install Cygwin (also next commands: make and etc)
+2 - download tesstrain project from the git
+3 - navigate to tesstrain folder
+4 - (possible to test included dataset)
+5 - make training MODEL_NAME=ocrd-testset MAX_ITERATIONS=1
+
+Preparing data (if the aim to just extend English model):
+1 - unpack English model to specific folder: combine_tessdata -u eng.traineddata traineddat_backup/eng.
+2 - 
