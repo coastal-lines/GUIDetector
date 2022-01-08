@@ -18,18 +18,64 @@ from Helpers.PatternMatching.PatternMatching import PatternMatching
 from Helpers.ActionsForElements import ActionsForElements
 import pytesseract
 
-list_subject1 = ImageLoaders.LoadBWImage(r"C:\Temp\!my\TestsTab\Subjects\subj2.bmp")
+img = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\c5.bmp")
 
-#H, W = list_subject1.shape[:2]
-#new_img = np.zeros([H, W * 3], dtype = np.uint8)
-#new_img.fill(255)
-#new_img[0:H, W:W + W] = list_subject1
+def ocr(img, type):
+    pytesseract.pytesseract.tesseract_cmd = r'c:\Users\User\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+    text = pytesseract.image_to_string(img, lang='eng', config="-c tessedit_char_whitelist=!?#@abc")
+    print(type + ": " + text)
 
-resize = cv2.resize(list_subject1, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-sharp = ImageFilters.Sharp(resize)
-negative = ImageConverters.ConvertImageToNegative(sharp)
-pytesseract.pytesseract.tesseract_cmd = r'c:\Temp\tesseract\tesseract.exe'
-text = pytesseract.image_to_string(negative, lang='eng')
-print(text)
+def original():
+    ocr(img, "original")
 
-CommonMethods.ShowImageWithOriginalSize(negative)
+def resized():
+    resize = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    ocr(resize, "resize")
+
+def negative():
+    negative = ImageConverters.ConvertImageToNegative(img)
+    ocr(negative, "negative")
+
+def sharp():
+    sharp = ImageFilters.Sharp(img)
+    ocr(sharp, "sharp")
+
+def negativeAndResize():
+    negative = ImageConverters.ConvertImageToNegative(img)
+    resize = cv2.resize(negative, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    ocr(resize, "negative resize")
+
+def negativeResizeSharp():
+    negative = ImageConverters.ConvertImageToNegative(img)
+    resize = cv2.resize(negative, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    sharp = ImageFilters.Sharp(resize)
+    ocr(sharp, "negative resize sharp")
+
+def transform():
+    transform = cv2.resize(img, None, fx=2, fy=1.2, interpolation=cv2.INTER_CUBIC)
+    ocr(transform, "transform")
+
+def treshold():
+    tr = Threshold.BinaryThreshold(img, 128, 255)
+    negative = ImageConverters.ConvertImageToNegative(tr)
+    ocr(negative, "treshold")
+
+def blur():
+    #WORK!
+    #blur = ImageFilters.Blur(C:\Temp\Photos\data\list_subjects5.bmp)
+    #blur = ImageFilters.Blur(blur)
+    th = Threshold.AdaptiveThreshold(img, 255, 7, 11)
+    blur = ImageFilters.Blur(th)
+    ocr(blur, "blur")
+
+#CommonMethods.ShowImageWithOriginalSize(negative)
+
+original()
+resized()
+negative()
+sharp()
+negativeAndResize()
+negativeResizeSharp()
+transform()
+treshold()
+blur()
