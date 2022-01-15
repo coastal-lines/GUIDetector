@@ -27,19 +27,31 @@ vis = np.concatenate((img1, img2), axis=0)
 
 #алгоритм
 #накладываем одно изображение на другое, сравниваем верхние 10% изображения, если наложилость - складываем в одно большое
+#нужно иметь в виду скролбары - из-за них может быть несовпадение, особенно если работаем с текстом
 
 w,h = CommonMethods.GetImageWidthAndHeigth(img1)
+w_scrollbar = 18
 h_test = round(h / 10)
-w_test = w
+w_test = w - w_scrollbar
 
 combined_image = None
-for y in range(h):
-    result = (img1[y:y+h_test, 0:w_test]==img2[y:y+h_test, 0:w_test]).all()
-    print(result)
+result = None
+for img1_y in range(h - h_test):
+    for img2_y in range(h - h_test):
+        roi1 = img1[img1_y:img1_y+h_test, 0:w_test]
+        roi2 = img2[img2_y:img2_y+h_test, 0:w_test]
+        result = (roi1==roi2).all()
+        #if(img1_y > 115 and img2_y > 40):
+        #    CommonMethods.ShowTwoImages(roi1, roi2)
+        #print(result)
 
-    if(result == True):
-        temp = img2[y:h, 0:w_test]
-        combined_image = np.concatenate((img1, temp), axis=0)
+        if(result == True):
+            temp = img1[0:img1_y - h_test, 0:w]
+            combined_image = np.concatenate((temp, img2), axis=0)
+            CommonMethods.ShowImageWithOriginalSize(combined_image)
+            break
+
+    if (result == True):
         break
 
-CommonMethods.ShowImageWithOriginalSize(combined_image)
+#CommonMethods.ShowImageWithOriginalSize(combined_image)
