@@ -20,8 +20,11 @@ import pytesseract
 
 ####!!!!!!!!!!!!Данная конкатенация происходит с учётом скролбаров
 
-img1 = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\Subjects\1.bmp")
-img2 = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\Subjects\2.bmp")
+##внутренние части сложно сравнивать друг с другом, т.к. некоторые части остаются неподвижными
+##решение - можно сделать несколько небольших скролов, каждый раз сохраняя картинку. затем сравнить все картинки между собой. части которые не изменились можно исключить из дальшейших сравнений
+
+img1 = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\Subjects\3.bmp")
+img2 = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\Subjects\4.bmp")
 
 #просто соединить два массива
 vis = np.concatenate((img1, img2), axis=0)
@@ -32,7 +35,7 @@ vis = np.concatenate((img1, img2), axis=0)
 #нужно иметь в виду скролбары - из-за них может быть несовпадение, особенно если работаем с текстом
 
 w,h = CommonMethods.GetImageWidthAndHeigth(img1)
-w_scrollbar = 18
+w_scrollbar = 45
 h_test = round(h / 10)
 w_test = w - w_scrollbar
 
