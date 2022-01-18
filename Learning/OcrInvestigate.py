@@ -22,7 +22,8 @@ img = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\c5.bmp")
 
 def ocr(img, type):
     pytesseract.pytesseract.tesseract_cmd = r'c:\Users\User\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
-    text = pytesseract.image_to_string(img, lang='eng', config="-c tessedit_char_whitelist=!?#@abc")
+    #text = pytesseract.image_to_string(img, lang='eng', config="-c tessedit_char_whitelist=!!!!!?#@abc!!!!!")
+    text = pytesseract.image_to_string(img, lang='eng', config='-c user-words=c:/Temp2/Tesseract-OCR/tessdata/traineddat_backup/wordlistfile.txt')
     print(type + ": " + text)
 
 def original():
