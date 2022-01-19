@@ -8,3 +8,16 @@ Training:
 Preparing data (if the aim to just extend English model):
 1 - unpack English model to specific folder: combine_tessdata -u eng.traineddata traineddat_backup/eng.
 2 - 
+
+
+Распаковать слова:
+dawg2wordlist eng.lstm-unicharset cus.lstm-word-dawg number.txt
+
+Распаковать языковую модель:
+combine_tessdata -u eng.traineddata traineddat_backup/eng.
+
+Собрать слова в lstm-word-dawg:
+wordlist2dawg wordlistfile cus2.lstm-word-dawg traineddat_backup/eng.lstm-unicharset
+
+Скомпилировать новую языковую модель:
+combine_tessdata -o eng.traineddata eng.lstm-word-dawg
