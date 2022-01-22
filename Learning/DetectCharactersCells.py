@@ -18,8 +18,9 @@ from Helpers.PatternMatching.PatternMatching import PatternMatching
 from Helpers.ActionsForElements import ActionsForElements
 import pytesseract
 
-user_image = ImageLoaders.LoadBWImage("C:\Temp\Photos\data\list_subjects8.bmp")
-th, threshed = cv2.threshold(user_image, 127, 255, cv2.THRESH_BINARY_INV)
+user_image = ImageLoaders.LoadBWImage("C:\Temp\Photos\data\list_subjects15.bmp")
+user_image = cv2.resize(user_image, None, fx=2.0, fy=1.0, interpolation=cv2.INTER_CUBIC)
+th, threshed = cv2.threshold(user_image, 250, 255, cv2.THRESH_BINARY_INV)
 
 #т.е. вся матрица сжимается в вектор по горизонтали (все строки сжимаются в одну). при этом значения суммируются и делятся на число столбцов. т.о. получается среднее значение для столбца
 hist_x = cv2.reduce(threshed, 0, cv2.REDUCE_AVG)
@@ -27,8 +28,6 @@ hist_x_reshaped = hist_x.reshape(-1)
 #здесь наоборот, матрица сжимается по вертикали (все столбцы сжимаются в один) и получается среднее значение для строки
 hist_y = cv2.reduce(threshed, 1, cv2.REDUCE_AVG)
 hist_y_reshaped = hist_y.reshape(-1)
-
-#CommonMethods.ShowImage(hist)
 
 th = 2
 H,W = user_image.shape[:2]
@@ -65,7 +64,7 @@ for i in uppers_x:
 for i in uppers_y:
     cv2.line(finish_image, (0, i), (W, i), (255, 0, 0), 1)
 
-#CommonMethods.ShowImageWithOriginalSize(finish_image)
+CommonMethods.ShowImageWithOriginalSize(finish_image)
 # насамомделе ничего рисовать не нужно, нужны координаты полученных прямоугольников
 # т.е. 1й прямоугольник это пространство между линией 1 и линией2
 # плюс нужно немного сдвигать прямоугольник - текст не совсем ровно в него помещается
@@ -117,7 +116,7 @@ for i in range(len(charactersRegions)):
 
 #читаем каждый символ тессерактом
 for i in range(len(roiArray)):
-    #ImageLoaders.SaveBWImage(roiArray[i], "c:/Temp/Photos/data/1/" + str(i) + ".bmp")
+    ImageLoaders.SaveBWImage(roiArray[i], "c:/Temp/Photos/data/1/" + str(i) + ".bmp")
     TesseractOCR.GetTextFromImage(roiArray[i])
 
 #CommonMethods.ShowImageWithOriginalSize(finish_image)

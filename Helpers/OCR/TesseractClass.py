@@ -15,14 +15,14 @@ class TesseractOCR():
         #convert to negative
         #image = ImageConverters.ConvertImageToNegative(image)
 
-        resize = cv2.resize(image, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_CUBIC)
-        #sharp = ImageFilters.Sharp(image)
-        blur = ImageFilters.Blur(image)
-        blur = ImageFilters.Blur(blur)
-        blur = ImageFilters.Blur(blur)
-        negative = ImageConverters.ConvertImageToNegative(blur)
+        resize = cv2.resize(image, None, fx=2.0, fy=2.0, interpolation=cv2.INTER_CUBIC)
+        sharp = ImageFilters.Sharp(image)
+        #blur = ImageFilters.Blur(resize)
+        #blur = ImageFilters.Blur(blur)
+        #blur = ImageFilters.Blur(blur)
+        negative = ImageConverters.ConvertImageToNegative(sharp)
         pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
-        text = pytesseract.image_to_string(blur, lang='eng', config="--psm 10 --oem 3")
+        text = pytesseract.image_to_string(image, lang='eng', config="--psm 10 --oem 3")
         #CommonMethods.ShowImageWithOriginalSize(blur)
         #print(pytesseract.get_languages())
         print(text[0])
