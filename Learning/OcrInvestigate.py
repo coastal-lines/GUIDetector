@@ -18,13 +18,13 @@ from Helpers.PatternMatching.PatternMatching import PatternMatching
 from Helpers.ActionsForElements import ActionsForElements
 import pytesseract
 
-img = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\c2.bmp")
+img = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\c1.bmp")
 
 def ocr(img, type):
     #pytesseract.pytesseract.tesseract_cmd = r'c:\Users\User\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
     pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
     #text = pytesseract.image_to_string(img, lang='eng', config="-c tessedit_char_whitelist=!!!!!?#@abc!!!!!")
-    text = pytesseract.image_to_string(img, lang='eng')
+    text = pytesseract.image_to_string(img, lang='eng', config="--psm 10 --oem 3")
     print(type + ": " + text)
 
 def original():

@@ -12,6 +12,9 @@ class ImageLoaders():
         image_bw = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         return image_bw
 
+    def SaveBWImage(img, path):
+        cv2.imwrite(path, img);
+
     @staticmethod
     def Serialize(data, name):
         with open(fr'C:\Temp2\Flash\MyLabeling\ORB\contour_{name}.data', 'w+b') as file:
