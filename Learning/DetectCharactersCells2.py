@@ -17,6 +17,7 @@ from Helpers.Json.LabeledData import OriginalElement, LabeledData
 from Helpers.PatternMatching.PatternMatching import PatternMatching
 from Helpers.ActionsForElements import ActionsForElements
 import pytesseract
+import easyocr
 
 #работающая версия для крупного шрифта
 user_image = ImageLoaders.LoadBWImage("C:\Temp\Photos\data\list_subjects8.bmp")
@@ -118,10 +119,10 @@ for i in range(len(charactersRegions)):
 #читаем каждый символ тессерактом
 pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
 for i in range(len(roiArray)):
-    #ImageLoaders.SaveBWImage(roiArray[i], "c:/Temp/Photos/data/1/" + str(i) + ".bmp")
     blur = ImageFilters.Blur(roiArray[i])
     blur = ImageFilters.Blur(blur)
     blur = ImageFilters.Blur(blur)
+
     text = pytesseract.image_to_string(blur, lang='eng', config="--psm 10 --oem 3")
     print(text[0])
 

@@ -18,13 +18,15 @@ from Helpers.PatternMatching.PatternMatching import PatternMatching
 from Helpers.ActionsForElements import ActionsForElements
 import pytesseract
 
-img = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\c1.bmp")
+img = ImageLoaders.LoadBWImage(r"c:\Temp2\Tesseract-OCR\tessdata\data\c8.bmp")
+pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
 
 def ocr(img, type):
     #pytesseract.pytesseract.tesseract_cmd = r'c:\Users\User\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
     pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
     #text = pytesseract.image_to_string(img, lang='eng', config="-c tessedit_char_whitelist=!!!!!?#@abc!!!!!")
-    text = pytesseract.image_to_string(img, lang='eng', config="--psm 10 --oem 3")
+    #text = pytesseract.image_to_string(img, lang='eng', config="--psm 10 --oem 3")
+    text = pytesseract.image_to_string(img, lang='eng')
     print(type + ": " + text)
 
 def original():
@@ -66,8 +68,8 @@ def blur():
     #WORK!
     #blur = ImageFilters.Blur(C:\Temp\Photos\data\list_subjects5.bmp)
     #blur = ImageFilters.Blur(blur)
-    th = Threshold.AdaptiveThreshold(img, 255, 7, 11)
-    blur = ImageFilters.Blur(th)
+    blur = ImageFilters.Blur(img)
+    blur = ImageFilters.Blur(blur)
     ocr(blur, "blur")
 
 #CommonMethods.ShowImageWithOriginalSize(negative)
