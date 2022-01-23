@@ -20,16 +20,21 @@ import pytesseract
 import easyocr
 
 #работающая версия для крупного шрифта
-user_image = ImageLoaders.LoadBWImage("C:\Temp\Photos\data\list_subjects8.bmp")
-#user_image = cv2.resize(user_image, None, fx=1.0, fy=1.0, interpolation=cv2.INTER_CUBIC)
-th, threshed = cv2.threshold(user_image, 127, 255, cv2.THRESH_BINARY_INV)
-#CommonMethods.ShowImageWithOriginalSize(threshed)
+user_image = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\list_subjects16.bmp")
+
+transform = cv2.resize(user_image, None, fx=4.5, fy=2.0, interpolation=cv2.INTER_CUBIC)
+tr = Threshold.BinaryThreshold(transform, 210, 255)
+blur = ImageFilters.Blur(tr)
+user_image = blur
+
+#CommonMethods.ShowImageWithOriginalSize(blur)
+
 
 #т.е. вся матрица сжимается в вектор по горизонтали (все строки сжимаются в одну). при этом значения суммируются и делятся на число столбцов. т.о. получается среднее значение для столбца
-hist_x = cv2.reduce(threshed, 0, cv2.REDUCE_AVG)
+hist_x = cv2.reduce(user_image, 0, cv2.REDUCE_AVG)
 hist_x_reshaped = hist_x.reshape(-1)
 #здесь наоборот, матрица сжимается по вертикали (все столбцы сжимаются в один) и получается среднее значение для строки
-hist_y = cv2.reduce(threshed, 1, cv2.REDUCE_AVG)
+hist_y = cv2.reduce(user_image, 1, cv2.REDUCE_AVG)
 hist_y_reshaped = hist_y.reshape(-1)
 
 th = 2
@@ -66,6 +71,8 @@ for i in uppers_x:
 
 for i in uppers_y:
     cv2.line(finish_image, (0, i), (W, i), (255, 0, 0), 1)
+
+CommonMethods.ShowImageWithOriginalSize(finish_image)
 
 # насамомделе ничего рисовать не нужно, нужны координаты полученных прямоугольников
 # т.е. 1й прямоугольник это пространство между линией 1 и линией2

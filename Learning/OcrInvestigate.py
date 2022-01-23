@@ -18,15 +18,15 @@ from Helpers.PatternMatching.PatternMatching import PatternMatching
 from Helpers.ActionsForElements import ActionsForElements
 import pytesseract
 
-img = ImageLoaders.LoadBWImage(r"c:\Temp2\Tesseract-OCR\tessdata\data\c8.bmp")
+img = ImageLoaders.LoadBWImage(r"C:\Temp\Photos\data\list_subjects16.bmp")
 pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
 
 def ocr(img, type):
     #pytesseract.pytesseract.tesseract_cmd = r'c:\Users\User\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
-    pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
+    #pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
     #text = pytesseract.image_to_string(img, lang='eng', config="-c tessedit_char_whitelist=!!!!!?#@abc!!!!!")
-    #text = pytesseract.image_to_string(img, lang='eng', config="--psm 10 --oem 3")
-    text = pytesseract.image_to_string(img, lang='eng')
+    text = pytesseract.image_to_string(img, lang='eng', config="--psm 10 --oem 3")
+    #text = pytesseract.image_to_string(img, lang='eng')
     print(type + ": " + text)
 
 def original():
@@ -69,17 +69,25 @@ def blur():
     #blur = ImageFilters.Blur(C:\Temp\Photos\data\list_subjects5.bmp)
     #blur = ImageFilters.Blur(blur)
     blur = ImageFilters.Blur(img)
-    blur = ImageFilters.Blur(blur)
+    #blur = ImageFilters.Blur(blur)
     ocr(blur, "blur")
 
-#CommonMethods.ShowImageWithOriginalSize(negative)
+def custom():
+    transform = cv2.resize(img, None, fx=4.5, fy=2.0, interpolation=cv2.INTER_CUBIC)
+    blur = ImageFilters.Blur(transform)
+    tr = Threshold.BinaryThreshold(blur, 210, 255)
 
-original()
-resized()
-negative()
-sharp()
-negativeAndResize()
-negativeResizeSharp()
-transform()
-treshold()
-blur()
+    CommonMethods.ShowImageWithOriginalSize(tr)
+    ocr(tr, "custom")
+
+#CommonMethods.ShowImageWithOriginalSize(negative)
+custom()
+#original()
+#resized()
+#negative()
+#sharp()
+#negativeAndResize()
+#negativeResizeSharp()
+#transform()
+#treshold()
+#blur()
