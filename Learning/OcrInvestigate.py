@@ -25,7 +25,7 @@ def ocr(img, type):
     #pytesseract.pytesseract.tesseract_cmd = r'c:\Users\User\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
     #pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
     #text = pytesseract.image_to_string(img, lang='eng', config="-c tessedit_char_whitelist=!!!!!?#@abc!!!!!")
-    text = pytesseract.image_to_string(img, lang='eng', config="--psm 10 --oem 3")
+    text = pytesseract.image_to_string(img, lang='foo', config="--psm 10 --oem 3")
     #text = pytesseract.image_to_string(img, lang='eng')
     print(type + ": " + text)
 
@@ -77,17 +77,17 @@ def custom():
     blur = ImageFilters.Blur(transform)
     tr = Threshold.BinaryThreshold(blur, 210, 255)
 
-    CommonMethods.ShowImageWithOriginalSize(tr)
+    #CommonMethods.ShowImageWithOriginalSize(tr)
     ocr(tr, "custom")
 
 #CommonMethods.ShowImageWithOriginalSize(negative)
 custom()
-#original()
-#resized()
-#negative()
-#sharp()
-#negativeAndResize()
-#negativeResizeSharp()
-#transform()
-#treshold()
-#blur()
+original()
+resized()
+negative()
+sharp()
+negativeAndResize()
+negativeResizeSharp()
+transform()
+treshold()
+blur()
