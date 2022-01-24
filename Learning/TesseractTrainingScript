@@ -9,7 +9,7 @@ Preparing data (if the aim to just extend English model):
 1 - unpack English model to specific folder: combine_tessdata -u eng.traineddata traineddat_backup/eng.
 2 - 
 
-
+====
 Распаковать слова:
 dawg2wordlist eng.lstm-unicharset cus.lstm-word-dawg number.txt
 
@@ -21,3 +21,18 @@ wordlist2dawg wordlistfile cus2.lstm-word-dawg traineddat_backup/eng.lstm-unicha
 
 Скомпилировать новую языковую модель:
 combine_tessdata -o eng.traineddata eng.lstm-word-dawg
+===
+
+===
+Тренировка собственного датасета:
+- отступы должны быть ~10px
+- датасет должен находиться в \tesstrain-main\data\foo-ground-truth
+- изображения формата *.tif
+- текстовые файлы формата *.gt.txt
+- ? можно заранее создать папку \tesstrain-main\data\foo и поместить туда два файла - foo.punc и foo.wordlist
+- foo.wordlist - список слов
+- foo.punc - список символов
+- нужно скачать файл eng.traineddata который из train best (у него большой объем)
+- скаченный файл нужно поместить в c:\Temp2\Tesseract-OCR\tessdata\my\tesstrain-main\src\tessdata_best\
+- через cygwin заходим в c:\Temp2\Tesseract-OCR\tessdata\my\tesstrain-main\
+- тренировка: make training MODEL_NAME=foo START_MODEL=eng TESSDATA=./src/tessdata_best
