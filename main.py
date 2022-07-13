@@ -1,195 +1,106 @@
+from pathlib import Path
+import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
-from Helpers.ImageLoaders import ImageLoaders
-from Helpers.CommonMethods import CommonMethods
-from BusinessTasks.Tasks import Tasks
-from Helpers.FeatureExtractors.Contours import Countours
-import cv2
-from decimal import Decimal
-from Helpers.FeatureExtractors.MSER import MSER
-from Helpers.Threshold import Threshold
-from Helpers.ImageConverters import ImageConverters
-from Helpers.Filters.ImageFilters import ImageFilters
-from Helpers.MorphologicalOperations import MorphologicalOperations
-from Helpers.OCR.TesseractClass import TesseractOCR
+from sklearn import svm, metrics, datasets
+from sklearn.utils import Bunch
+from sklearn.model_selection import GridSearchCV, train_test_split
+from skimage.io import imread
+from skimage.transform import resize
+from skimage.color import rgb2gray
+from skimage.draw import rectangle
+from skimage.draw import rectangle_perimeter
+
+def show(img):
+    plt.imshow(img, cmap='gray')
+    plt.show()
+
+def check_one(num):
+    show(image_dataset.images[num])
+    r = model.predict([image_dataset.images[num].flatten()])
+    print(model.predict([image_dataset.images[num].flatten()]))
+    print(image_dataset.target_names[model.predict([image_dataset.images[num].flatten()])[0]])
+
+def check_real_image():
+    # try to find on real image
+    test = imread(r"C:\Users\PavelIankin\Desktop\gui\full_screens\tests_main.bmp")
+    #test = rgb2gray(test)
+    test = resize(test, (1000, 1000), anti_aliasing=True, mode='reflect')
+
+    results = []
+    for i in range(929 - 64):
+        for j in range(620 - 64):
+            roi = test[i:i + 64, j:j + 64]
+            result = model.predict([roi.flatten()])
+            #results.append(result)
+            #print(result)
+            if(result == 0):
+                start = (i, j)
+                rr, cc = rectangle_perimeter(start, extent=(64, 64))
+                test[rr, cc, :] = (255, 0, 0)
+                print("button")
+        print(i)
+
+    show(test)
+
+    print("stop")
+
+def load_image_files(container_path, dimension=(64, 64)):
+    """
+    Load image files with categories as subfolder names
+    which performs like scikit-learn sample dataset
+
+    Parameters
+    ----------
+    container_path : string or unicode
+        Path to the main folder holding one subfolder per category
+    dimension : tuple
+        size to which image are adjusted to
+
+    Returns
+    -------
+    Bunch
+    """
+    image_dir = Path(container_path)
+    folders = [directory for directory in image_dir.iterdir() if directory.is_dir()]
+    categories = [fo.name for fo in folders]
+
+    descr = "A image classification dataset"
+    images = []
+    flat_data = []
+    target = []
+    for i, direc in enumerate(folders):
+        for file in direc.iterdir():
+            img = imread(file)
+            img_resized = resize(img, dimension, anti_aliasing=True, mode='reflect')
+            flat_data.append(img_resized.flatten())
+            images.append(img_resized)
+            target.append(i)
+    flat_data = np.array(flat_data)
+    target = np.array(target)
+    images = np.array(images)
+
+    return Bunch(data=flat_data,
+                 target=target,
+                 target_names=categories,
+                 images=images,
+                 DESCR=descr)
+
+image_dataset = load_image_files("C:/Users/PavelIankin/Desktop/gui/examples/")
+X_train, X_test, y_train, y_test = train_test_split(image_dataset.data, image_dataset.target, test_size=0.3,random_state=109)
+model = svm.SVC(probability=True)
+model.fit(X_train, y_train)
 
 
-# работать нужно не с кропнутым изображением, а с регионом!
+for_test = imread(r"C:\Users\PavelIankin\Desktop\gui\examples\textboxes\Screenshot_53.bmp")
+for_test=resize(for_test,(64,64,3))
+for_test=[for_test.flatten()]
+probability=model.predict_proba(for_test)
 
-class Cell():
-    def __init__(self, x, y, w, h):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
+for ind,val in enumerate(image_dataset.target_names):
+    print(f'{val} = {probability[0][ind]*100}%')
 
+print("The predicted image is : " + image_dataset.target_names[model.predict(for_test)[0]])
 
-img = ImageLoaders.LoadImage(r'C:\Temp\!my\TestsTab\Tests.bmp')
-img_resized = CommonMethods.Resize(img, 1919, 1079)
-height, width, channels = img.shape
-w_coef = 1919 / width
-h_coef = 1079 / height
+#check_one(230)
+#check_real_image()
 
-
-def CalculateRectangle(x, y, width, heigth):
-    if (w_coef > 0):
-        x = round(x / w_coef)
-        width = round(width / w_coef)
-    if (w_coef < 0):
-        x = round(x * w_coef)
-        width = round(width * w_coef)
-    if (h_coef > 0):
-        y = round(y / h_coef)
-        heigth = round(heigth / h_coef)
-    if (h_coef < 0):
-        y = round(y * h_coef)
-        heigth = round(heigth * h_coef)
-
-    return x, y, width, heigth
-
-
-def Filter():
-    x = 15
-    y = 245
-    width = 257
-    heigth = 580
-
-    x, y, width, heigth = CalculateRectangle(x, y, width, heigth)
-
-    point1 = (x, y)
-    point2 = (x + width, y + heigth)
-    Countours.DrawRectangleByPoints(point1, point2, img)
-
-
-def TestN():
-    x = 30
-    y = 618
-    width = 225
-    heigth = 44
-
-    x, y, width, heigth = CalculateRectangle(x, y, width, heigth)
-
-    point1 = (x, y)
-    point2 = (x + width, y + heigth)
-    Countours.DrawRectangleByPoints(point1, point2, img)
-
-
-def TestS():
-    x = 30
-    y = 690
-    width = 228
-    heigth = 29
-
-    x, y, width, heigth = CalculateRectangle(x, y, width, heigth)
-
-    point1 = (x, y)
-    point2 = (x + width, y + heigth)
-    Countours.DrawRectangleByPoints(point1, point2, img)
-
-
-def ApplyB():
-    x = 30
-    y = 740
-    width = 230
-    heigth = 37
-
-    x, y, width, heigth = CalculateRectangle(x, y, width, heigth)
-
-    point1 = (x, y)
-    point2 = (x + width, y + heigth)
-    Countours.DrawRectangleByPoints(point1, point2, img)
-
-
-def Table():
-    x = 275
-    y = 223
-    width = 1630
-    heigth = 740
-
-    x, y, width, heigth = CalculateRectangle(x, y, width, heigth)
-
-    point1 = (x, y)
-    point2 = (x + width, y + heigth)
-    Countours.DrawRectangleByPoints(point1, point2, img)
-    return x, y, width, heigth
-
-
-def DetectCells(img, x, y, width, heigth):
-    cells = []
-
-    img_table = CommonMethods.MaskForRoi(img, x, y, width, heigth)
-    #img_table = ImageLoaders.LoadImage(r'C:\Temp\Photos\table_bmp.bmp')
-    img_bw = ImageConverters.ConvertToBW(img_table)
-    th = Threshold.AdaptiveThreshold(img_bw, 255, 11, 8)
-    erosion = MorphologicalOperations.Erosion(th)
-    blur = ImageFilters.Blur(erosion)
-    #CommonMethods.ShowImage(img_table)
-    contours = Countours.GetContours(blur)
-    print(len(contours[0]))
-
-    # seaching cells
-    for i in range(len(contours[0])):
-        position = len(contours[0]) - (i + 1)  # нужен реверс т.к. отсчет идет с правой стороны
-        x, y, w, h = cv2.boundingRect(contours[0][position])
-        if (w > h and w > 10 and h > 20 and h < 40):  # нужно доработать алгоритм исключения выбросов
-            cv2.rectangle(img_table, (x, y), (x + w, y + h), (0, 0, 255), 1)
-            cells.append(Cell(x, y, w, h))
-
-    #CommonMethods.ShowImage(img_table)
-    return img, cells
-
-def ConvertCellsToTable(cells):
-    #ищем минимальное Х чтобы определить границу таблицы
-    list_x  = []
-    for i in cells:
-        list_x.append(i.x)
-    min_x = min(list_x)
-    print(min_x)
-
-    # ищем минимальное Y чтобы определить границу таблицы
-    list_y  = []
-    for i in cells:
-        list_y.append(i.y)
-    min_y = min(list_y)
-    print(min_y)
-
-    # calculate columns
-    columns = 0
-    for c in cells:
-        if (c.y == min_y):
-            columns = columns + 1
-
-    # calculate rows
-    rows = 0
-    for c in cells:
-        if (c.x == min_x):
-            rows = rows + 1
-
-    array = np.array(cells)
-    table = array.reshape(rows, columns)
-
-    return table
-
-
-def SelectCell(img, table, column, row):
-    column = column - 1
-    row = row - 1
-    cv2.rectangle(img, (table[column, row].x, table[column, row].y),
-                  (table[column, row].x + table[column, row].w, table[column, row].y + table[column, row].h),
-                  (0, 0, 0), 2)
-    return table[column, row]
-
-Filter()
-TestN()
-TestS()
-ApplyB()
-x, y, width, heigth = Table()
-img, cells = DetectCells(img, x, y, width, heigth)
-table = ConvertCellsToTable(cells)
-
-
-cell = SelectCell(img, table, 2, 2)
-crop = CommonMethods.CropImage(img, cell.x, cell.y, cell.w, cell.h)
-text = TesseractOCR.GetTextFromImage(crop)
-
-CommonMethods.ShowImage(img)
