@@ -22,7 +22,8 @@ class TesseractOCR():
         #blur = ImageFilters.Blur(blur)
         negative = ImageConverters.ConvertImageToNegative(sharp)
         pytesseract.pytesseract.tesseract_cmd = r'c:\Temp2\Tesseract-OCR\tesseract.exe'
-        text = pytesseract.image_to_string(image, lang='eng', config="--psm 10 --oem 3")
+        #text = pytesseract.image_to_string(image, lang='eng', config="--psm 10 --oem 3")
+        text = pytesseract.image_to_string(image, lang='eng', config="--psm 3 --oem 3")
         #CommonMethods.ShowImageWithOriginalSize(blur)
         #print(pytesseract.get_languages())
         print(text[0])
