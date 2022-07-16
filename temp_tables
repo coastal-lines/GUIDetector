@@ -45,18 +45,18 @@ def DrawRectangleByCoordinates(image, x, y, w ,h):
     cv.rectangle(image, point1, point2, (0, 255, 0), 2)
 
 #test ocr
-#img = LoadImage(r"C:\Users\PavelIankin\Desktop\gui\full_screens\tests_main2.bmp")
+#img = LoadImage(r"C:\Users\\Desktop\gui\full_screens\tests_main2.bmp")
 #TesseractOCR.GetTextFromImage(img)
 
 #test pattern matching
-#img = LoadImage(r"C:\Users\PavelIankin\Desktop\gui\full_screens\tests_main.bmp")
-#pattern = LoadImage(r"C:\Users\PavelIankin\Desktop\gui\groupsOfElements\filterTests.bmp")
+#img = LoadImage(r"C:\Users\\Desktop\gui\full_screens\tests_main.bmp")
+#pattern = LoadImage(r"C:\Users\\Desktop\gui\groupsOfElements\filterTests.bmp")
 #x, y, w, h = PatternMatching.DetectByPatternMatching(ConvertToBW(img), ConvertToBW(pattern))
 #DrawRectangleByCoordinates(img, x, y, w, h)
 #ShowImage(img)
 
 #test rectangle
-#img = LoadImage(r"C:\Users\PavelIankin\Desktop\gui\full_screens\tests_main.bmp")
+#img = LoadImage(r"C:\Users\\Desktop\gui\full_screens\tests_main.bmp")
 #bw = ConvertToBW(img)
 #ret,thresh1 = cv.threshold(bw,254,255,cv.THRESH_BINARY)
 #kernel = np.ones((5, 5), np.uint8)
@@ -72,7 +72,7 @@ def DrawRectangleByCoordinates(image, x, y, w ,h):
 #ShowImage(img)
 
 #test table
-img = LoadImage(r"C:\Users\PavelIankin\Desktop\gui\groupsOfElements\table_big2.bmp")
+img = LoadImage(r"C:\Users\\Desktop\gui\groupsOfElements\table_big2.bmp")
 bw = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 tableArea = GuiObject(bw, 0, 0, bw.shape[0], bw.shape[1])
 
